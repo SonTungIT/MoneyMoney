@@ -1,0 +1,28 @@
+@use '../../styles/' as *;
+
+:root {
+    --primary: #ff8a00;
+    --white: #fff;
+    --common: #1b3630;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+}
+
+body {
+    font-family: $font-family-montserrat;
+    height: 100%;
+    text-rendering: optimizeSpeed;
+}
+
+a[href] {
+    color: var(--text-color);
+    text-decoration: none;
+    color: unset !important;
+}

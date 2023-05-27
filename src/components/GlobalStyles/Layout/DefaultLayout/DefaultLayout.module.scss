@@ -1,0 +1,14 @@
+@use '../../../../styles/' as *;
+
+.wapper {
+    @include flex(center, unset, column);
+
+    .container {
+        width: 100%;
+        display: flex;
+        .content {
+            flex: 1;
+            // padding-bottom: 50px;
+        }
+    }
+}

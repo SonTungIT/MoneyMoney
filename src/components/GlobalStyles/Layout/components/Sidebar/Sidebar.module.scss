@@ -1,0 +1,90 @@
+@use '../../../../../styles/' as *;
+
+.sidebar {
+    @include flex(flex-start, unset, column);
+    width: 266px;
+    min-height: 603px;
+    max-height: 100%;
+    padding: 30px 10px 0;
+    gap: 25px;
+    color: $blue-main-color;
+    background: $bg-nav-color;
+    transition: 0.2s ease-in-out;
+
+    .top-bar {
+        height: $item-sidebar-height;
+        padding: 0 0 0 20px;
+    }
+    .nav-box {
+        @include flex(flex-start, unset, column);
+        gap: 10px;
+
+        .nav-item {
+            @include flex(center, space-between, row);
+            gap: 10px;
+            width: calc($sidebar-width - 20px);
+            height: $item-sidebar-height;
+            padding: 0 0 0 20px;
+
+            .nav-title {
+                @include flex(center, unset, row);
+                gap: 10px;
+                height: 100%;
+
+                .icon {
+                    @include flex(center, center, unset);
+                    width: 24px;
+                    height: $item-sidebar-height;
+                    padding: 2px;
+                }
+
+                .title {
+                    font-size: 18px;
+                    line-height: 22px;
+                }
+            }
+
+            .arrow-icon {
+                @include flex(center, center, unset);
+                width: 24px;
+                height: fit-content;
+            }
+
+            .display {
+                display: none;
+            }
+        }
+
+        .sub-item {
+            @include flex(center, unset, row);
+            width: calc($sidebar-width - 20px);
+            height: 34px;
+            gap: 5px;
+            padding: 5px 5px 5px 45px;
+            background: #f1f1f1;
+
+            .icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .sub-title {
+                font-size: 18px;
+                line-height: 22px;
+            }
+        }
+
+        .active {
+            font-weight: 700;
+        }
+    }
+}
+
+.sidebar-respon {
+    width: 67px;
+    padding: 30px 0 0 0;
+
+    .nav-item {
+        width: calc(67px - 20px) !important;
+    }
+}
