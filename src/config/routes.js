@@ -6,7 +6,11 @@ const routes = {
     register: '/register',
     information: '/information',
 
-    header: '/',
+    LayoutHome: '/',
+
+    SoGiaoDich: '/sogiaodich',
+    BaoCao: '/baocao',
+    NganSach: '/ngansach',
 };
 
 export default routes;

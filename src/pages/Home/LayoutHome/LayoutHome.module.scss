@@ -1,0 +1,61 @@
+@use '../../../styles/' as *;
+
+.wapper {
+    @include flex(center, unset, column);
+
+    .container {
+        width: 100%;
+        height: 700px;
+        display: flex;
+        .content {
+            flex: 1;
+            // padding-bottom: 50px;
+            height: auto;
+            @include flex(center, none, column);
+            gap: 20px;
+            text-align: center;
+
+            .content-top {
+                margin-top: 50px;
+                font-size: 54px;
+                font-weight: 500;
+
+                span {
+                    color: #ff8a00;
+                }
+            }
+
+            .content-bot {
+                @include flex(center, space-evenly, row);
+
+                width: 80%;
+                height: 300px;
+                color: white;
+                background-color: #ff8a00;
+                margin-top: 40px;
+                border-radius: 20px;
+
+                .bot-left {
+                    @include flex(center, space-between, column);
+                    height: 50%;
+                    gap: 30px;
+                    margin-bottom: 40px;
+
+                    span {
+                        font-size: 30px;
+                        font-weight: 600;
+                        text-align: start;
+                        // word-break: break-word;
+                    }
+                }
+                .bot-right {
+                    margin-top: 24px;
+                    .image-home {
+                        width: auto;
+                        height: 280px;
+                    }
+                }
+            }
+        }
+    }
+}
