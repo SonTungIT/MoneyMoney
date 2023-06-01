@@ -5,10 +5,13 @@ import { Link } from 'react-router-dom';
 import config from '~/config';
 import { IconDate, IconLogo, IconSearch, IconArrowRight, AddIcon } from '../Icons';
 import Button from '../Button';
+import ImportModal from './ImportModal/ImportModal';
 
 const cx = classNames.bind(styles);
 
 function Header() {
+    const [openModal, setOpenModal] = useState(false);
+
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
@@ -23,7 +26,13 @@ function Header() {
                 </div>
                 <div className={cx('content')}>
                     <div className={cx('icon-items')}>
-                        <Button primary leftIcon={<AddIcon />}>
+                        <Button
+                            primary
+                            leftIcon={<AddIcon />}
+                            onClick={() => {
+                                setOpenModal(true);
+                            }}
+                        >
                             THÊM MỚI
                         </Button>
                         <IconDate />
@@ -50,6 +59,7 @@ function Header() {
                     </div>
                 </div>
             </div>
+            {openModal && <ImportModal closeModal={setOpenModal} />}
         </header>
     );
 }

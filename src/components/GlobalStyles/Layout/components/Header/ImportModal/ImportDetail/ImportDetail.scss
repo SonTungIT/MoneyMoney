@@ -1,0 +1,80 @@
+@use '../../../../../../../styles/' as *;
+
+.detailBackground {
+    top: 0%;
+    right: 0%;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+}
+
+.detailContainer {
+    width: 500px;
+    height: 500px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        @include flex(center, unset, unset);
+
+        gap: 80px;
+        font-size: 20px;
+        font-weight: 600;
+        padding: 10px;
+    }
+}
+
+.detailBody {
+    @include flex(center, center, unset);
+
+    .bodyComon {
+        padding: 10px 30px;
+        font-size: 14px;
+        color: #333;
+        border-bottom: 1px solid #f1f1f1;
+
+        :focus {
+            color: #ff8a00;
+            border-bottom: 1px solid #ff8a00;
+        }
+    }
+}
+
+.customTabs {
+    .ant-tabs-nav {
+        // Kiểu cho phần đầu Tabs
+    }
+
+    .ant-tabs-tab {
+        // Kiểu cho từng mục trong Tabs
+    }
+
+    .ant-tabs-tabpane {
+        // Kiểu cho nội dung của từng mục
+        padding: 10px;
+
+        :hover {
+            background-color: #00c88915;
+        }
+    }
+}
+
+.childLabel {
+    @include flex(center, start, unset);
+
+    padding: 10px;
+    gap: 20px;
+    border-bottom: 0.5px solid #808080;
+
+    :hover {
+        background-color: transparent !important;
+    }
+}
