@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import './Login.scss';
 import { LogoMoney, IconGoogle, IconFacebook, IconPassword } from '~/components/GlobalStyles/Layout/components/Icons';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -14,8 +16,8 @@ function Login() {
         myHeaders.append('Content-Type', 'application/json');
 
         var raw = JSON.stringify({
-            email: email, // Sử dụng giá trị từ state
-            password: password, // Sử dụng giá trị từ state
+            email: email,
+            password: password,
         });
 
         var requestOptions = {
@@ -26,8 +28,22 @@ function Login() {
         };
 
         fetch('https://money-money.azurewebsites.net/api/v1/money-money/accounts/authentication', requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(response.status);
+            })
+            .then((result) => {
+                console.log('result', result);
+                // Lưu accessToken và refreshToken vào localStorage
+                localStorage.setItem('accessToken', result.data.accessToken);
+                localStorage.setItem('refreshToken', result.data.refreshToken);
+
+                if (result.status === '202 ACCEPTED') {
+                    navigate('/sogiaodich');
+                }
+            })
             .catch((error) => console.log('error', error));
     };
 

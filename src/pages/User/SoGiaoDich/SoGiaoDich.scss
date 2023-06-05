@@ -109,4 +109,15 @@
             color: #222;
         }
     }
+
+    .showDetail {
+        border-top: 1px solid #999;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        cursor: pointer;
+        :hover {
+            background-color: var(--primary);
+        }
+    }
 }

@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import { IconSad } from '~/components/GlobalStyles/Layout/components/Icons';
 import styles from '~/pages/User/SoGiaoDich/SoGiaoDich.scss';
 import Button from '~/components/GlobalStyles/Layout/components/Button';
 import { Avatar, Card, Space } from 'antd';
 import config from '~/config';
+import LayoutDetails from '../../LayoutDetails';
 
 function TabContent({ icon, content }) {
+    const [isLayoutDetailsOpen, setIsLayoutDetailsOpen] = useState(false);
+
+    const handleToggleLayoutDetails = () => {
+        setIsLayoutDetailsOpen(!isLayoutDetailsOpen);
+    };
+
     return (
         <div className="container">
             {/* {icon && icon}
@@ -40,7 +47,7 @@ function TabContent({ icon, content }) {
                     </div>
                     <p>123</p>
                 </div>
-                <div className="bodyDetail">
+                <button className="bodyDetail showDetail" onClick={handleToggleLayoutDetails}>
                     <div className="titleBody">
                         <Avatar />
                         <div className="dichVu">
@@ -49,8 +56,9 @@ function TabContent({ icon, content }) {
                         </div>
                     </div>
                     <p>123</p>
-                </div>
+                </button>
             </div>
+            {isLayoutDetailsOpen && <LayoutDetails closeLayoutDetails={setIsLayoutDetailsOpen} />}
         </div>
     );
 }

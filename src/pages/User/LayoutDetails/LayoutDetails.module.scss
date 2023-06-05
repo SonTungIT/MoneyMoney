@@ -5,13 +5,23 @@
 
     height: 674px;
     width: 750px;
+    top: 0%;
+    right: 0%;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9;
 
     .header {
         @include flex(center, space-around, unset);
 
         background-color: white;
         height: 10%;
-        width: 100%;
+        width: 60%;
         border-bottom: 1px solid #33333343;
         gap: 30%;
     }
@@ -21,7 +31,7 @@
         gap: 20px;
         background-color: white;
         height: 40%;
-        width: 100%;
+        width: 60%;
         padding-left: 60px;
 
         .avtBody {
@@ -57,6 +67,7 @@
             .sumDetail {
                 color: #039be5;
                 font-size: 36px;
+                padding-bottom: 20px;
             }
         }
     }

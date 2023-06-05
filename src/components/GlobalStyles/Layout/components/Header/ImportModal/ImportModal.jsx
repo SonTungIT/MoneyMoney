@@ -12,13 +12,35 @@ function ImportModal({ closeModal }) {
         console.log(date, dateString);
     };
 
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const payload = Object.fromEntries(formData.entries());
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+            },
+            body: JSON.stringify(payload),
+            redirect: 'follow',
+        };
+
+        fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/incomes', requestOptions)
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.log('error', error));
+    };
+
     return (
         <div className="modalBackground">
             <div className="modalContainer">
                 <div className="title">
                     <h1>Thêm giao dịch</h1>
                 </div>
-                <form className="form-input">
+                <form className="form-input" onSubmit={handleFormSubmit}>
                     <div className="body">
                         <label className="label-input">
                             <div className="content-input">
