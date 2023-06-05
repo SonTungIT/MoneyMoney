@@ -1,7 +1,36 @@
+import React, { useState } from 'react';
 import './Login.scss';
 import { LogoMoney, IconGoogle, IconFacebook, IconPassword } from '~/components/GlobalStyles/Layout/components/Icons';
 
 function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async (event) => {
+        event.preventDefault();
+
+        var myHeaders = new Headers();
+        myHeaders.append('accept', 'application/json');
+        myHeaders.append('Content-Type', 'application/json');
+
+        var raw = JSON.stringify({
+            email: email, // Sử dụng giá trị từ state
+            password: password, // Sử dụng giá trị từ state
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow',
+        };
+
+        fetch('https://money-money.azurewebsites.net/api/v1/money-money/accounts/authentication', requestOptions)
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.log('error', error));
+    };
+
     return (
         <div className="Container">
             <div className="Background-Top">
@@ -38,10 +67,18 @@ function Login() {
                         <div className="account-text">
                             <span>Using Money Lover account</span>
                         </div>
-                        <form action="" className="form-login">
+                        <form action="" className="form-login" onSubmit={handleLogin}>
                             <div className="v-input v-application">
                                 <div className="v-input__control">
-                                    <input type="email" id="email" name="email" required placeholder="Email" />
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        required
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
                                 </div>
                             </div>
                             <div className="v-input v-application">
@@ -52,6 +89,8 @@ function Login() {
                                         name="password"
                                         required
                                         placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                     <div className="v-input__append-inner">
                                         <IconPassword />

@@ -1,0 +1,12 @@
+@use '../../../styles/' as *;
+
+.wrapper {
+    height: 410px;
+    width: 600px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+
+    margin-top: 10px;
+}

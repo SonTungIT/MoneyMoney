@@ -1,0 +1,63 @@
+@use '../../../styles/' as *;
+
+.details {
+    @include flex(center, center, column);
+
+    height: 674px;
+    width: 750px;
+
+    .header {
+        @include flex(center, space-around, unset);
+
+        background-color: white;
+        height: 10%;
+        width: 100%;
+        border-bottom: 1px solid #33333343;
+        gap: 30%;
+    }
+
+    .body {
+        display: flex;
+        gap: 20px;
+        background-color: white;
+        height: 40%;
+        width: 100%;
+        padding-left: 60px;
+
+        .avtBody {
+            margin-top: 10px;
+            width: 70px;
+            height: 60px;
+            font-size: 30px;
+        }
+
+        .avtDetail {
+            @include flex(start, space-around, column);
+            gap: 20px;
+            font-size: 20px;
+            width: 100%;
+
+            .textDetail {
+                @include flex(start, space-around, column);
+
+                height: 40%;
+                border-bottom: 1px solid #999;
+                span {
+                    color: #000;
+                    font-size: 24px;
+                    font-weight: 500;
+                }
+
+                p {
+                    color: #333;
+                    font-size: 14px;
+                }
+            }
+
+            .sumDetail {
+                color: #039be5;
+                font-size: 36px;
+            }
+        }
+    }
+}

@@ -50,14 +50,25 @@
 }
 
 .textbox {
-    color: white;
-    font-size: 0.8rem;
+    color: #f25a5a;
+    font-size: 1rem;
     height: 38px;
     text-decoration: none;
     background-color: transparent;
 
     &:hover {
-        background: rgb(128, 128, 128, 0.3);
+        background: #f25a5a5a;
+    }
+}
+
+.update {
+    color: var(--primary);
+    font-size: 1rem;
+    height: 38px;
+    text-decoration: none;
+    background-color: transparent;
+    &:hover {
+        background: #ff880047;
     }
 }
 
@@ -85,4 +96,11 @@
     height: 30px;
     background-color: rgb(128, 128, 128, 0.3);
     border-radius: 5px;
+}
+
+.small {
+    color: #ff8a00;
+    font-size: 20px;
+    background-color: transparent;
+    cursor: pointer;
 }

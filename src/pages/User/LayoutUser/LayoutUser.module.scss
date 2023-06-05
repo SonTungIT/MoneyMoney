@@ -1,17 +1,18 @@
 @use '../../../styles/' as *;
 
 .content {
-    @include flex(center, center, unset);
+    @include flex(center, space-evenly, unset);
 
     height: 674px;
     background-color: rgba($color: #c1bdbd, $alpha: 26%);
 
     .inner {
         height: 70%;
-        width: 800px;
+        width: 600px;
         border: 1px solid none;
         border-radius: 20px;
         box-shadow: 0px 3px 3px 3px #999999;
         border-collapse: collapse;
+        background-color: #fff;
     }
 }

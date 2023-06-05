@@ -21,7 +21,8 @@
 }
 
 .container {
-    height: 89%;
+    height: 410px;
+    width: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,12 +32,81 @@
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     box-shadow: 0px 2px 4px #818181;
+    position: relative;
 
     // min-height: 483px;
 
     span {
-        font-size: 28px;
-        color: #818181;
-        font-weight: 500;
+        // font-size: 28px;
+        // color: #818181;
+        // font-weight: 500;
+    }
+
+    .bodyTop {
+        @include flex(center, flex-start, column);
+
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .btnBaocao {
+        z-index: 9;
+
+        :hover {
+            color: var(--primary);
+        }
+    }
+
+    .bodyBot {
+        @include flex(center, flex-end, column);
+
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        margin-bottom: 20px;
+
+        .titleBody {
+            @include flex(center, center, unset);
+            gap: 10px;
+
+            .dichVu {
+                span {
+                    color: #333;
+                }
+                p {
+                    color: #999;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+
+    .bodyDetail {
+        @include flex(center, space-between, unset);
+        width: 99%;
+        padding: 10px 20px;
+        background-color: #fff;
+
+        .tienVao {
+            color: rgb(0, 179, 255);
+        }
+
+        .tienRa {
+            color: rgba(255, 0, 68, 0.777);
+        }
+
+        span {
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        .lineTop {
+            border-top: 1px solid #818181;
+            color: #222;
+        }
     }
 }

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import classNames from 'classnames/bind';
 import styles from './SoGiaoDich.scss';
 import LayoutUser from '../LayoutUser';
-import { IconSad } from '~/components/GlobalStyles/Layout/components/Icons';
+import LayoutDetails from '../LayoutDetails';
 import { Tabs } from 'antd';
+import TabPane from 'antd/es/tabs/TabPane';
+import TabContent from './TabContent/TabContent';
+import { IconSad } from '~/components/GlobalStyles/Layout/components/Icons';
 
 const cx = classNames.bind(styles);
 
@@ -14,35 +17,54 @@ function SoGiaoDich() {
 
     const items = [
         {
-            key: '1',
-            label: `Tab 1`,
-            children: `Content of Tab Pane 1`,
+            key: '2',
+            label: `THÁNG TRƯỚC`,
+            children: [
+                {
+                    icon: <IconSad />,
+                    content: `Không có giao dịch`,
+                },
+            ],
         },
         {
-            key: '2',
-            label: `Tab 2`,
-            children: `Content of Tab Pane 2`,
+            key: '1',
+            label: `THÁNG NÀY`,
+            children: [
+                {
+                    icon: <IconSad />,
+                    content: `Không có giao dịch`,
+                },
+            ],
         },
         {
             key: '3',
-            label: `Tab 3`,
-            children: `Content of Tab Pane 3`,
+            label: `TƯƠNG LAI`,
+            children: [
+                {
+                    icon: <IconSad />,
+                    content: `Không có giao dịch`,
+                },
+            ],
         },
     ];
+
     return (
         <LayoutUser>
-            {/* <div className={cx('header')}>
-                <div>THÁNG TRƯỚC</div>
-                <div>THÁNG NÀY</div>
-                <div>TƯƠNG LAI</div>
-            </div>
-            <div className={cx('container')}>
-                <IconSad />
-                <span>Không có giao dịch</span>
-            </div> */}
-
-            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+            <Tabs defaultActiveKey="1" onChange={onChange} className="header">
+                {items.map((item) => (
+                    <TabPane tab={item.label} key={item.key}>
+                        {Array.isArray(item.children) ? (
+                            item.children.map((child, index) => (
+                                <TabContent key={index} icon={child.icon} content={child.content} />
+                            ))
+                        ) : (
+                            <div>{item.children}</div>
+                        )}
+                    </TabPane>
+                ))}
+            </Tabs>
         </LayoutUser>
+        // <LayoutDetails>Tùng</LayoutDetails>
     );
 }
 
