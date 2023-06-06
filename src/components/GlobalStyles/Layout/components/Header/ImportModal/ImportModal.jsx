@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './ImportModal.scss';
 import Button from '../../Button';
-import { IconGroup, IconRight, IconSP, IconWallet2 } from '../../Icons';
+import { IconGroup, IconRight, IconWallet2 } from '../../Icons';
 import ImportDetail from './ImportDetail/ImportDetail';
 import { DatePicker, Space } from 'antd';
 
 function ImportModal({ closeModal }) {
     const [openDetail, setOpenDetail] = useState(false);
+    const [selectedGroup, setSelectedGroup] = useState(null);
 
     const onChange = (date, dateString) => {
         console.log(date, dateString);
@@ -45,13 +46,7 @@ function ImportModal({ closeModal }) {
                         <label className="label-input">
                             <div className="content-input">
                                 <p>Ví</p>
-                                <Button
-                                    leftIcon={<IconWallet2 />}
-                                    // type="button"
-                                    // onClick={() => {
-                                    //     setOpenDetail(true);
-                                    // }}
-                                >
+                                <Button leftIcon={<IconWallet2 />}>
                                     <div className="detail-input">
                                         Tiền mặt
                                         <IconRight />
@@ -68,7 +63,7 @@ function ImportModal({ closeModal }) {
                                     }}
                                 >
                                     <div className="detail-input">
-                                        Chọn nhóm
+                                        {selectedGroup ? selectedGroup : 'Chọn nhóm'}
                                         <IconRight />
                                     </div>
                                 </Button>
@@ -91,12 +86,7 @@ function ImportModal({ closeModal }) {
                     </div>
                     <div className="ant-divider" role="separator"></div>
                     <div className="footer">
-                        <Button
-                            onClick={() => {
-                                closeModal(false);
-                            }}
-                            text
-                        >
+                        <Button onClick={() => closeModal(false)} text>
                             Hủy
                         </Button>
                         <Button type="submit" rounded>
@@ -105,7 +95,7 @@ function ImportModal({ closeModal }) {
                     </div>
                 </form>
             </div>
-            {openDetail && <ImportDetail closeDetail={setOpenDetail} />}
+            {openDetail && <ImportDetail closeDetail={setOpenDetail} setSelectedGroup={setSelectedGroup} />}
         </div>
     );
 }

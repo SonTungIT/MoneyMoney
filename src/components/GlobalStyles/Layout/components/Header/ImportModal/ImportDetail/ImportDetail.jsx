@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import './ImportDetail.scss';
 import Button from '../../../Button';
 import { IconClose, IconMenu } from '../../../Icons';
-import { Avatar, Tabs } from 'antd';
+import { Avatar, Tabs, Select, Space } from 'antd';
 import TabPane from 'antd/es/tabs/TabPane';
 
-const onChange = (key) => {
-    console.log(key);
-};
 const items = [
     {
         key: '1',
@@ -24,7 +21,6 @@ const items = [
     {
         key: '2',
         label: `KHOẢN CHI`,
-
         children: [
             {
                 content: `Ăn Uống`,
@@ -48,7 +44,16 @@ const items = [
     },
 ];
 
-function ImportDetail({ closeDetail }) {
+function ImportDetail({ closeDetail, setSelectedGroup }) {
+    const handleGroupSelection = (group) => {
+        setSelectedGroup(group);
+        closeDetail(false);
+    };
+
+    const onChange = (key) => {
+        console.log(key);
+    };
+
     return (
         <div className="detailBackground">
             <div className="detailContainer">
@@ -67,8 +72,12 @@ function ImportDetail({ closeDetail }) {
                             <TabPane tab={item.label} key={item.key}>
                                 {Array.isArray(item.children) ? (
                                     item.children.map((child) => (
-                                        <div className="childLabel" key={child.label}>
-                                            {<Avatar />}
+                                        <div
+                                            className="childLabel"
+                                            key={child.label}
+                                            onClick={() => handleGroupSelection(child.content)}
+                                        >
+                                            <Avatar />
                                             <p>{child.content}</p>
                                         </div>
                                     ))
