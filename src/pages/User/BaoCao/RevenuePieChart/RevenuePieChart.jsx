@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pie } from '@ant-design/charts';
+// import { Pie } from '@ant-design/charts';
 import classNames from 'classnames/bind';
 import styles from './RevenuePieChart.scss';
 
@@ -51,7 +51,7 @@ const RevenuePieChart = () => {
     return (
         <div className={cx('containerChart')}>
             <p>Khoản thu</p>
-            <Pie {...config} />
+            {/* <Pie {...config} /> */}
         </div>
     );
 };
