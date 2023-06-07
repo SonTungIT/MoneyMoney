@@ -47,6 +47,13 @@ function Login() {
             .catch((error) => console.log('error', error));
     };
 
+    const handleGoogleLogin = () => {
+        const redirectUri = encodeURIComponent('{YOUR_REDIRECT_URI}');
+        const state = encodeURIComponent('{YOUR_STATE}');
+        const url = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id={YOUR_CLIENT_ID}&scope=email%20profile&redirect_uri=${redirectUri}&state=${state}`;
+        window.location.href = url;
+    };
+
     return (
         <div className="Container">
             <div className="Background-Top">
@@ -65,7 +72,7 @@ function Login() {
                             <span>Using social networking accounts</span>
                         </div>
                         <div className="social-items">
-                            <button className="social-item google">
+                            <button className="social-item google" onClick={handleGoogleLogin}>
                                 <span className="btn-content">
                                     <IconGoogle />
                                     <span class="social-item-name">Connect with Google</span>

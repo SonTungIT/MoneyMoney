@@ -17,7 +17,19 @@ function ImportModal({ closeModal }) {
         event.preventDefault();
 
         const formData = new FormData(event.target);
-        const payload = Object.fromEntries(formData.entries());
+        const selectedCategory = formData.get('selectedCategory');
+        const selectedDate = formData.get('selectedDate');
+        const amount = parseFloat(formData.get('amount'));
+        const description = formData.get('description');
+
+        // Tạo payload dữ liệu
+        const payload = {
+            incomeCategoryName: selectedCategory ? selectedCategory : '',
+            date: selectedDate ? selectedDate.toISOString() : '',
+            amount: isNaN(amount) ? 0 : amount,
+            description: description ? description : '',
+            assetName: 'Tiền mặt trong túi',
+        };
 
         const requestOptions = {
             method: 'POST',
@@ -48,7 +60,7 @@ function ImportModal({ closeModal }) {
                                 <p>Ví</p>
                                 <Button leftIcon={<IconWallet2 />}>
                                     <div className="detail-input">
-                                        Tiền mặt
+                                        Tiền mặt trong túi
                                         <IconRight />
                                     </div>
                                 </Button>
