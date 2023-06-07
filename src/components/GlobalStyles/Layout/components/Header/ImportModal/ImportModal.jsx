@@ -1,3 +1,4 @@
+// ImportModal.jsx
 import React, { useState } from 'react';
 import './ImportModal.scss';
 import Button from '../../Button';
@@ -8,23 +9,20 @@ import { DatePicker, Space } from 'antd';
 function ImportModal({ closeModal }) {
     const [openDetail, setOpenDetail] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [amount, setAmount] = useState(0);
+    const [description, setDescription] = useState('');
 
     const onChange = (date, dateString) => {
-        console.log(date, dateString);
+        setSelectedDate(date);
     };
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
 
-        const formData = new FormData(event.target);
-        const selectedCategory = formData.get('selectedCategory');
-        const selectedDate = formData.get('selectedDate');
-        const amount = parseFloat(formData.get('amount'));
-        const description = formData.get('description');
-
         // Tạo payload dữ liệu
         const payload = {
-            incomeCategoryName: selectedCategory ? selectedCategory : '',
+            incomeCategoryName: selectedGroup ? selectedGroup : '',
             date: selectedDate ? selectedDate.toISOString() : '',
             amount: isNaN(amount) ? 0 : amount,
             description: description ? description : '',
@@ -45,6 +43,11 @@ function ImportModal({ closeModal }) {
             .then((response) => response.text())
             .then((result) => console.log(result))
             .catch((error) => console.log('error', error));
+    };
+
+    const handleGroupSelection = (group) => {
+        setSelectedGroup(group);
+        setOpenDetail(false);
     };
 
     return (
@@ -82,17 +85,26 @@ function ImportModal({ closeModal }) {
                             </div>
                             <div className="content-input">
                                 <p>Số tiền</p>
-                                <input type="number" placeholder="0" />
+                                <input
+                                    type="number"
+                                    placeholder="0"
+                                    value={amount}
+                                    onChange={(event) => setAmount(parseFloat(event.target.value))}
+                                />
                             </div>
                             <div className="content-input">
                                 <p>Ngày</p>
                                 <Space direction="vertical">
-                                    <DatePicker onChange={onChange} />
+                                    <DatePicker value={selectedDate} onChange={onChange} />
                                 </Space>
                             </div>
                             <div className="content-input note-input">
                                 <p>Ghi chú</p>
-                                <input type="text" />
+                                <input
+                                    type="text"
+                                    value={description}
+                                    onChange={(event) => setDescription(event.target.value)}
+                                />
                             </div>
                         </label>
                     </div>
@@ -107,7 +119,7 @@ function ImportModal({ closeModal }) {
                     </div>
                 </form>
             </div>
-            {openDetail && <ImportDetail closeDetail={setOpenDetail} setSelectedGroup={setSelectedGroup} />}
+            {openDetail && <ImportDetail closeDetail={setOpenDetail} setSelectedGroup={handleGroupSelection} />}
         </div>
     );
 }

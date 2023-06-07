@@ -1,3 +1,4 @@
+// ImportDetail.jsx
 import React, { useState } from 'react';
 import './ImportDetail.scss';
 import Button from '../../../Button';
@@ -35,10 +36,28 @@ const items = [
         label: `KHOẢN THU`,
         children: [
             {
-                content: `Thu lãi`,
+                content: `Tiền lương`,
             },
             {
-                content: `Lương`,
+                content: `Tiền trợ cấp`,
+            },
+            {
+                content: `Tiền thưởng`,
+            },
+            {
+                content: `Tiền đầu tư`,
+            },
+            {
+                content: `Chứng khoán`,
+            },
+            {
+                content: `Cho thuê nhà`,
+            },
+            {
+                content: `Kinh doanh online`,
+            },
+            {
+                content: `Khác `,
             },
         ],
     },
