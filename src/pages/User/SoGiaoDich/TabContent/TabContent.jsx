@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { IconSad } from '~/components/GlobalStyles/Layout/components/Icons';
 import styles from '~/pages/User/SoGiaoDich/SoGiaoDich.scss';
@@ -9,10 +9,37 @@ import LayoutDetails from '../../LayoutDetails';
 
 function TabContent({ icon, content }) {
     const [isLayoutDetailsOpen, setIsLayoutDetailsOpen] = useState(false);
+    const [transactions, setTransactions] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     const handleToggleLayoutDetails = () => {
         setIsLayoutDetailsOpen(!isLayoutDetailsOpen);
     };
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
+
+    const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+    };
+
+    useEffect(() => {
+        fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/incomes', requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+                setTransactions(data);
+                console.log(data);
+                const newCategories = data.map((transaction) => transaction.incomeCategoryName);
+                setCategories((prevCategories) => {
+                    const uniqueCategories = Array.from(new Set([...prevCategories, ...newCategories]));
+                    return uniqueCategories;
+                });
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
 
     return (
         <div className="container">
@@ -37,26 +64,31 @@ function TabContent({ icon, content }) {
                 XEM BÁO CÁO GIAI ĐOẠN NÀY
             </Button>
             <div className="bodyBot">
-                <div className="bodyDetail">
-                    <div className="titleBody">
-                        <Avatar />
-                        <div className="dichVu">
-                            <span className="incomeCategoryName">Ăn Uống</span>
-                            <p>1 Transactions</p>
+                {categories.map((category) => {
+                    const categoryTransactions = transactions.filter(
+                        (transaction) => transaction.incomeCategoryName === category,
+                    );
+                    return (
+                        <div key={category} className="bodyDetail">
+                            {categoryTransactions.map((transaction, index) => (
+                                <div key={index} className="titleBody">
+                                    {index === 0 && (
+                                        <div>
+                                            <Avatar />
+                                            <div className="dichVu">
+                                                <span className="incomeCategoryName">
+                                                    {transaction.incomeCategoryName}
+                                                </span>
+                                                <p>{categoryTransactions.length} Transactions</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <p>{transaction.amount}</p>
+                                </div>
+                            ))}
                         </div>
-                    </div>
-                    <p>123</p>
-                </div>
-                <button className="bodyDetail showDetail" onClick={handleToggleLayoutDetails}>
-                    <div className="titleBody">
-                        <Avatar />
-                        <div className="dichVu">
-                            <span>Ăn chơi</span>
-                            <p>1 Transactions</p>
-                        </div>
-                    </div>
-                    <p>123</p>
-                </button>
+                    );
+                })}
             </div>
             {isLayoutDetailsOpen && <LayoutDetails closeLayoutDetails={setIsLayoutDetailsOpen} />}
         </div>
