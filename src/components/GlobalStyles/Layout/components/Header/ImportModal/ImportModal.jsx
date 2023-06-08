@@ -1,4 +1,3 @@
-// ImportModal.jsx
 import React, { useState } from 'react';
 import './ImportModal.scss';
 import Button from '../../Button';
@@ -41,7 +40,14 @@ function ImportModal({ closeModal }) {
 
         fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/incomes', requestOptions)
             .then((response) => response.text())
-            .then((result) => console.log(result))
+            .then((result) => {
+                console.log(result);
+                // Cập nhật số tiền vào
+                const totalAmount = isNaN(amount) ? 0 : amount;
+                document.querySelector('.tienVao').textContent = totalAmount.toString();
+                // Đóng form
+                closeModal(false);
+            })
             .catch((error) => console.log('error', error));
     };
 

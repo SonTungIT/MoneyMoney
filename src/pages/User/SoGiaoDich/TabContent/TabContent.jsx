@@ -41,7 +41,7 @@ function TabContent({ icon, content }) {
                     <div className="titleBody">
                         <Avatar />
                         <div className="dichVu">
-                            <span>Ăn Uống</span>
+                            <span className="incomeCategoryName">Ăn Uống</span>
                             <p>1 Transactions</p>
                         </div>
                     </div>
@@ -51,7 +51,7 @@ function TabContent({ icon, content }) {
                     <div className="titleBody">
                         <Avatar />
                         <div className="dichVu">
-                            <span>Ăn Uống</span>
+                            <span>Ăn chơi</span>
                             <p>1 Transactions</p>
                         </div>
                     </div>
