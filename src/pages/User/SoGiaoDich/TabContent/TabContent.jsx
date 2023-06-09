@@ -7,13 +7,17 @@ import { Avatar, Card, Space } from 'antd';
 import config from '~/config';
 import LayoutDetails from '../../LayoutDetails';
 
+const cx = classNames.bind(styles);
+
 function TabContent({ icon, content }) {
     const [isLayoutDetailsOpen, setIsLayoutDetailsOpen] = useState(false);
     const [transactions, setTransactions] = useState([]);
     const [categories, setCategories] = useState([]);
     const [categoryAmounts, setCategoryAmounts] = useState({});
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-    const handleToggleLayoutDetails = () => {
+    const handleToggleLayoutDetails = (transaction) => {
+        setSelectedTransaction(transaction);
         setIsLayoutDetailsOpen(!isLayoutDetailsOpen);
     };
 
@@ -37,7 +41,7 @@ function TabContent({ icon, content }) {
                     const uniqueCategories = Array.from(new Set([...prevCategories, ...newCategories]));
                     return uniqueCategories;
                 });
-                //Đây là đoạn tính TotalMount và TotalIncome
+                // Đây là đoạn tính TotalMount và TotalIncome
                 const amounts = {};
                 data.forEach((transaction) => {
                     if (amounts[transaction.incomeCategoryName]) {
@@ -99,7 +103,10 @@ function TabContent({ icon, content }) {
                                                 <div className="totalAmount">{categoryAmounts[category]}</div>
                                             </div>
                                         )}
-                                        <button className="detailChild" onClick={handleToggleLayoutDetails}>
+                                        <button
+                                            className="detailChild"
+                                            onClick={() => handleToggleLayoutDetails(transaction)}
+                                        >
                                             <div className="miniTitle">
                                                 <span className="date">{transaction.date.slice(8, 10)}</span>
                                                 <div className="dichVu">
@@ -118,7 +125,9 @@ function TabContent({ icon, content }) {
                     })}
                 </div>
             </div>
-            {isLayoutDetailsOpen && <LayoutDetails closeLayoutDetails={setIsLayoutDetailsOpen} />}
+            {isLayoutDetailsOpen && (
+                <LayoutDetails closeLayoutDetails={setIsLayoutDetailsOpen} transactionData={selectedTransaction} />
+            )}
         </div>
     );
 }
