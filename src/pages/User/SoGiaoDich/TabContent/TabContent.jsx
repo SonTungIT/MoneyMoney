@@ -11,10 +11,12 @@ function TabContent({ icon, content }) {
     const [isLayoutDetailsOpen, setIsLayoutDetailsOpen] = useState(false);
     const [transactions, setTransactions] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [categoryAmounts, setCategoryAmounts] = useState({});
 
     const handleToggleLayoutDetails = () => {
         setIsLayoutDetailsOpen(!isLayoutDetailsOpen);
     };
+
     const myHeaders = new Headers();
     myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
 
@@ -35,11 +37,23 @@ function TabContent({ icon, content }) {
                     const uniqueCategories = Array.from(new Set([...prevCategories, ...newCategories]));
                     return uniqueCategories;
                 });
+                //Đây là đoạn tính TotalMount và TotalIncome
+                const amounts = {};
+                data.forEach((transaction) => {
+                    if (amounts[transaction.incomeCategoryName]) {
+                        amounts[transaction.incomeCategoryName] += transaction.amount;
+                    } else {
+                        amounts[transaction.incomeCategoryName] = transaction.amount;
+                    }
+                });
+                setCategoryAmounts(amounts);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
             });
     }, []);
+
+    const totalIncome = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
 
     return (
         <div className="container">
@@ -49,7 +63,7 @@ function TabContent({ icon, content }) {
             <div className="bodyTop">
                 <div className="bodyDetail">
                     <span>Tiền vào</span>
-                    <p className="tienVao">0</p>
+                    <p className="tienVao">{totalIncome}</p>
                 </div>
                 <div className="bodyDetail">
                     <span>Tiền ra</span>
@@ -82,14 +96,16 @@ function TabContent({ icon, content }) {
                                                         <p>{categoryTransactions.length} Transactions</p>
                                                     </div>
                                                 </div>
-                                                <div className="totalAmount">200,000</div>
+                                                <div className="totalAmount">{categoryAmounts[category]}</div>
                                             </div>
                                         )}
                                         <div className="detailChild">
                                             <div className="miniTitle">
-                                                <span className="date">09</span>
+                                                <span className="date">{transaction.date.slice(8, 10)}</span>
                                                 <div className="dichVu">
-                                                    <span className="dateMonthYear">09-06-2023</span>
+                                                    <span className="dateMonthYear">
+                                                        {transaction.date.split('T')[0]}
+                                                    </span>
                                                     <p className="description">{transaction.description}</p>
                                                 </div>
                                             </div>
