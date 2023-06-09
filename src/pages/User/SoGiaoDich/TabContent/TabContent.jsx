@@ -59,36 +59,48 @@ function TabContent({ icon, content }) {
                     <span></span>
                     <p className="lineTop">-123</p>
                 </div>
-            </div>
-            <Button className="btnBaocao" small to={config.routes.BaoCao}>
-                XEM BÁO CÁO GIAI ĐOẠN NÀY
-            </Button>
-            <div className="bodyBot">
-                {categories.map((category) => {
-                    const categoryTransactions = transactions.filter(
-                        (transaction) => transaction.incomeCategoryName === category,
-                    );
-                    return (
-                        <div key={category} className="bodyDetail">
-                            {categoryTransactions.map((transaction, index) => (
-                                <div key={index} className="titleBody">
-                                    {index === 0 && (
-                                        <div>
-                                            <Avatar />
-                                            <div className="dichVu">
-                                                <span className="incomeCategoryName">
-                                                    {transaction.incomeCategoryName}
-                                                </span>
-                                                <p>{categoryTransactions.length} Transactions</p>
+                <Button className="btnBaocao" small to={config.routes.BaoCao}>
+                    XEM BÁO CÁO GIAI ĐOẠN NÀY
+                </Button>
+                <div className="bodyBot">
+                    {categories.map((category) => {
+                        const categoryTransactions = transactions.filter(
+                            (transaction) => transaction.incomeCategoryName === category,
+                        );
+                        return (
+                            <div key={category} className="bodyDetail">
+                                {categoryTransactions.map((transaction, index) => (
+                                    <React.Fragment key={index}>
+                                        {index === 0 && (
+                                            <div className="titleBody">
+                                                <div className="miniTitle">
+                                                    <Avatar />
+                                                    <div className="dichVu">
+                                                        <span className="incomeCategoryName">
+                                                            {transaction.incomeCategoryName}
+                                                        </span>
+                                                        <p>{categoryTransactions.length} Transactions</p>
+                                                    </div>
+                                                </div>
+                                                <div className="totalAmount">200,000</div>
                                             </div>
+                                        )}
+                                        <div className="detailChild">
+                                            <div className="miniTitle">
+                                                <span className="date">09</span>
+                                                <div className="dichVu">
+                                                    <span className="dateMonthYear">09-06-2023</span>
+                                                    <p className="description">{transaction.description}</p>
+                                                </div>
+                                            </div>
+                                            <p className="amount">{transaction.amount}</p>
                                         </div>
-                                    )}
-                                    <p>{transaction.amount}</p>
-                                </div>
-                            ))}
-                        </div>
-                    );
-                })}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
             {isLayoutDetailsOpen && <LayoutDetails closeLayoutDetails={setIsLayoutDetailsOpen} />}
         </div>

@@ -39,13 +39,14 @@ function ImportModal({ closeModal }) {
         };
 
         fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/incomes', requestOptions)
-            .then((response) => response.text())
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(response.status);
+            })
             .then((result) => {
                 console.log(result);
-                // Cập nhật số tiền vào
-                const totalAmount = isNaN(amount) ? 0 : amount;
-                document.querySelector('.tienVao').textContent = totalAmount.toString();
-                // Đóng form
                 closeModal(false);
             })
             .catch((error) => console.log('error', error));
