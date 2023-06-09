@@ -7,8 +7,29 @@ import { Avatar } from 'antd';
 
 const cx = classNames.bind(styles);
 
-function LayoutDetails({ closeLayoutDetails, transactionData }) {
-    const { incomeCategoryName, assetName, date, description, amount } = transactionData;
+function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransaction }) {
+    const { id, incomeCategoryName, assetName, date, description, amount } = transactionData;
+
+    // Hàm xóa giao dịch
+    const handleDeleteTransaction = () => {
+        var myHeaders = new Headers();
+        myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
+
+        var requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow',
+        };
+
+        fetch(`https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/${id}`, requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                console.log(result);
+                // Gọi hàm xóa giao dịch từ props để cập nhật UI hoặc thực hiện các thao tác khác sau khi xóa
+                onDeleteTransaction(id);
+            })
+            .catch((error) => console.log('error', error));
+    };
 
     return (
         <div className={cx('details')}>
@@ -23,7 +44,9 @@ function LayoutDetails({ closeLayoutDetails, transactionData }) {
                     Chi tiết về giao dịch
                 </Button>
                 <div>
-                    <Button textbox>Xóa</Button>
+                    <Button textbox onClick={handleDeleteTransaction}>
+                        Xóa
+                    </Button>
                     <Button update>Sửa</Button>
                 </div>
             </div>

@@ -21,6 +21,17 @@ function TabContent({ icon, content }) {
         setIsLayoutDetailsOpen(!isLayoutDetailsOpen);
     };
 
+    const handleAddTransaction = (newTransaction) => {
+        // Cập nhật dữ liệu sau khi thêm mới giao dịch thành công
+        setTransactions((prevTransactions) => [...prevTransactions, newTransaction]);
+    };
+
+    const handleDeleteTransaction = (deletedTransactionId) => {
+        const updatedTransactions = transactions.filter((transaction) => transaction.id !== deletedTransactionId);
+        setTransactions(updatedTransactions);
+        setIsLayoutDetailsOpen(false);
+    };
+
     const myHeaders = new Headers();
     myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
 
@@ -108,11 +119,9 @@ function TabContent({ icon, content }) {
                                             onClick={() => handleToggleLayoutDetails(transaction)}
                                         >
                                             <div className="miniTitle">
-                                                <span className="date">{transaction.date.slice(8, 10)}</span>
+                                                <span className="date">{transaction.date?.slice(8, 10)}</span>
                                                 <div className="dichVu">
-                                                    <span className="dateMonthYear">
-                                                        {transaction.date.split('T')[0]}
-                                                    </span>
+                                                    <p className="dateMonthYear">{transaction.date?.split('T')[0]}</p>
                                                     <p className="description">{transaction.description}</p>
                                                 </div>
                                             </div>
@@ -126,7 +135,11 @@ function TabContent({ icon, content }) {
                 </div>
             </div>
             {isLayoutDetailsOpen && (
-                <LayoutDetails closeLayoutDetails={setIsLayoutDetailsOpen} transactionData={selectedTransaction} />
+                <LayoutDetails
+                    closeLayoutDetails={setIsLayoutDetailsOpen}
+                    transactionData={selectedTransaction}
+                    onDeleteTransaction={handleDeleteTransaction}
+                />
             )}
         </div>
     );
