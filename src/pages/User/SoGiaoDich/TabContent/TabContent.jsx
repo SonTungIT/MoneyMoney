@@ -85,7 +85,7 @@ function TabContent({ icon, content }) {
                                                 <div className="totalAmount">200,000</div>
                                             </div>
                                         )}
-                                        <div className="detailChild">
+                                        <button className="detailChild" onClick={handleToggleLayoutDetails}>
                                             <div className="miniTitle">
                                                 <span className="date">09</span>
                                                 <div className="dichVu">
@@ -94,7 +94,7 @@ function TabContent({ icon, content }) {
                                                 </div>
                                             </div>
                                             <p className="amount">{transaction.amount}</p>
-                                        </div>
+                                        </button>
                                     </React.Fragment>
                                 ))}
                             </div>

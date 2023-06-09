@@ -115,15 +115,21 @@
             @include flex(center, space-between, unset);
             gap: 10px;
             width: 99%;
+            padding: 5px 0;
             margin-top: 10px;
-
-            :hover {
-                background-color: #ff88004b;
-            }
-
+            background-color: transparent;
+            border: none;
             .amount {
                 color: rgb(0, 179, 255);
             }
+
+            .dichVu {
+                text-align: start;
+            }
+        }
+
+        .detailChild:hover {
+            background-color: #ff880063;
         }
 
         .tienVao {
