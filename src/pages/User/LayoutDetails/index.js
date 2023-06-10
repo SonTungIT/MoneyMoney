@@ -1,27 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './LayoutDetails.module.scss';
 import Button from '~/components/GlobalStyles/Layout/components/Button';
 import { IconClose } from '~/components/GlobalStyles/Layout/components/Icons';
 import { Avatar } from 'antd';
-import UpdateLayoutDetails from './EditDetails';
 
 const cx = classNames.bind(styles);
 
-function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransaction }) {
+function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransaction, onUpdateTransaction }) {
     const { id, incomeCategoryName, expenseCategoryName, assetName, date, description, amount } = transactionData;
     const checkInformation = transactionData.incomeCategoryName === incomeCategoryName;
     const [isEditing, setIsEditing] = useState(false);
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [editedTransactionData, setEditedTransactionData] = useState({ ...transactionData });
-    const [transactionDataNew, setTransactionData] = useState(false);
+
+    useEffect(() => {
+        setEditedTransactionData({ ...transactionData });
+    }, [transactionData]);
 
     const handleEditClick = () => {
         setIsEditing(true);
-    };
-
-    const handleUpdateModalClose = () => {
-        setIsUpdateModalOpen(false);
     };
 
     const handleInputChange = (event) => {
@@ -44,10 +41,11 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             description: editedTransactionData.description,
             assetName: editedTransactionData.assetName,
         };
+
         var requestOptions = {
             method: 'PUT',
             headers: myHeaders,
-            body: JSON.stringify(payload), // Thay thế payload bằng đối tượng chứa dữ liệu cần cập nhật
+            body: JSON.stringify(payload),
             redirect: 'follow',
         };
 
@@ -55,17 +53,16 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             .then((response) => response.text())
             .then((result) => {
                 console.log(result);
-                // Xử lý phản hồi thành công từ API (nếu cần)
+                setIsEditing(false); // Exit editing mode
+                onUpdateTransaction(); // Call the callback function to update the data
             })
             .catch((error) => console.log('error', error));
     };
 
     const handleCancelChanges = () => {
-        // TODO: Xử lý hủy bỏ các thay đổi
-        console.log('Các thay đổi đã được hủy bỏ');
+        setIsEditing(false);
     };
 
-    // Hàm xóa giao dịch
     const handleDeleteTransaction = () => {
         var myHeaders = new Headers();
         myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
@@ -80,7 +77,14 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             .then((response) => response.text())
             .then((result) => {
                 console.log(result);
-                // Gọi hàm xóa giao dịch từ props để cập nhật UI hoặc thực hiện các thao tác khác sau khi xóa
+                onDeleteTransaction(id);
+            })
+            .catch((error) => console.log('error', error));
+
+        fetch(`https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/${id}`, requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                console.log(result);
                 onDeleteTransaction(id);
             })
             .catch((error) => console.log('error', error));
@@ -130,9 +134,8 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             </div>
             {isEditing && (
                 <div className={cx('body-edit')}>
-                    <h2 className={cx('editTitle')}>Chỉnh sửa chi tiết giao dịch</h2>
                     <div className={cx('editField')}>
-                        <label htmlFor="assetName">Category Name:</label>
+                        <label htmlFor="assetName">Nhóm:</label>
                         <input
                             type="text"
                             id="assetName"
@@ -142,7 +145,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
                         />
                     </div>
                     <div className={cx('editField')}>
-                        <label htmlFor="assetName">Asset Name:</label>
+                        <label htmlFor="assetName">Ví:</label>
                         <input
                             type="text"
                             id="assetName"
@@ -152,7 +155,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
                         />
                     </div>
                     <div className={cx('editField')}>
-                        <label htmlFor="date">Date:</label>
+                        <label htmlFor="date">Ngày:</label>
                         <input
                             type="text"
                             id="date"
@@ -162,7 +165,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
                         />
                     </div>
                     <div className={cx('editField')}>
-                        <label htmlFor="description">Description:</label>
+                        <label htmlFor="description">Mô tả:</label>
                         <input
                             type="text"
                             id="description"
@@ -172,7 +175,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
                         />
                     </div>
                     <div className={cx('editField')}>
-                        <label htmlFor="amount">Amount:</label>
+                        <label htmlFor="amount">Số tiền:</label>
                         <input
                             type="number"
                             id="amount"
@@ -182,8 +185,12 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
                         />
                     </div>
                     <div className={cx('editButtons')}>
-                        <Button onClick={handleSaveChanges}>Lưu</Button>
-                        <Button onClick={handleCancelChanges}>Hủy bỏ</Button>
+                        <Button rounded onClick={handleSaveChanges}>
+                            Lưu
+                        </Button>
+                        <Button text onClick={handleCancelChanges}>
+                            Hủy bỏ
+                        </Button>
                     </div>
                 </div>
             )}
