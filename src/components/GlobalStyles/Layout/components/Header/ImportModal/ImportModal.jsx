@@ -22,6 +22,7 @@ function ImportModal({ closeModal }) {
         // Tạo payload dữ liệu
         const payload = {
             incomeCategoryName: selectedGroup ? selectedGroup : '',
+            expenseCategoryName: selectedGroup ? selectedGroup : '',
             date: selectedDate ? selectedDate.toISOString() : '',
             amount: isNaN(amount) ? 0 : amount,
             description: description ? description : '',
@@ -37,8 +38,22 @@ function ImportModal({ closeModal }) {
             body: JSON.stringify(payload),
             redirect: 'follow',
         };
-
+        // API incomes
         fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/incomes', requestOptions)
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(response.status);
+            })
+            .then((result) => {
+                console.log(result);
+                closeModal(false);
+            })
+            .catch((error) => console.log('error', error));
+
+        // API expenses
+        fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/expenses', requestOptions)
             .then((response) => {
                 if (response.ok) {
                     return response.json();

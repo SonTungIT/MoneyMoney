@@ -123,8 +123,17 @@
             margin-top: 10px;
             background-color: transparent;
             border: none;
+
             .amount {
+                /* Default styling for the amount */
+            }
+
+            .income {
                 color: rgb(0, 179, 255);
+            }
+
+            .expense {
+                color: #e51c23;
             }
 
             .dichVu {

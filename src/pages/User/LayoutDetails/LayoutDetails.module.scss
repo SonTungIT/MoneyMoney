@@ -65,9 +65,16 @@
             }
 
             .sumDetail {
-                color: #039be5;
                 font-size: 36px;
                 padding-bottom: 20px;
+            }
+
+            .income {
+                color: #039be5;
+            }
+
+            .expense {
+                color: rgba(255, 0, 68, 0.777);
             }
         }
     }

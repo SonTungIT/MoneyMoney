@@ -3,7 +3,7 @@
 .content {
     @include flex(unset, space-evenly, unset);
 
-    height: 1000px;
+    height: 2000px;
     background-color: rgba($color: #c1bdbd, $alpha: 26%);
 
     .inner {

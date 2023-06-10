@@ -8,7 +8,7 @@ import { Avatar } from 'antd';
 const cx = classNames.bind(styles);
 
 function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransaction }) {
-    const { id, incomeCategoryName, assetName, date, description, amount } = transactionData;
+    const { id, incomeCategoryName, expenseCategoryName, assetName, date, description, amount } = transactionData;
 
     // Hàm xóa giao dịch
     const handleDeleteTransaction = () => {
@@ -54,12 +54,19 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
                 <Avatar className={cx('avtBody')} />
                 <div className={cx('avtDetail')}>
                     <div className={cx('textDetail')}>
-                        <span>{incomeCategoryName}</span>
+                        <span>{incomeCategoryName || expenseCategoryName}</span>
                         <p>{assetName}</p>
                         <p>{date.split('T')[0]}</p>
                     </div>
                     <span>{description}</span>
-                    <div className={cx('sumDetail')}>{amount}</div>
+                    <div
+                        className={cx('sumDetail', {
+                            income: transactionData.incomeCategoryName,
+                            expense: transactionData.expenseCategoryName,
+                        })}
+                    >
+                        {amount}
+                    </div>
                 </div>
             </div>
         </div>

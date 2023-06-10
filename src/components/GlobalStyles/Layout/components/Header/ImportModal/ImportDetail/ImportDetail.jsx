@@ -27,7 +27,25 @@ const items = [
                 content: `Ăn Uống`,
             },
             {
-                content: `Di chuyển`,
+                content: `Giải trí`,
+            },
+            {
+                content: `Giao thông vận tải`,
+            },
+            {
+                content: `Sinh hoạt`,
+            },
+            {
+                content: `Quần áo`,
+            },
+            {
+                content: `Giáo dục`,
+            },
+            {
+                content: `Sức khỏe`,
+            },
+            {
+                content: `Khác`,
             },
         ],
     },

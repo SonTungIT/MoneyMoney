@@ -7,8 +7,6 @@ import { Avatar, Card, Space } from 'antd';
 import config from '~/config';
 import LayoutDetails from '../../LayoutDetails';
 
-const cx = classNames.bind(styles);
-
 function TabContent({ icon, content }) {
     const [isLayoutDetailsOpen, setIsLayoutDetailsOpen] = useState(false);
     const [transactions, setTransactions] = useState([]);
@@ -16,14 +14,58 @@ function TabContent({ icon, content }) {
     const [categoryAmounts, setCategoryAmounts] = useState({});
     const [selectedTransaction, setSelectedTransaction] = useState(null);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const accessToken = localStorage.getItem('accessToken');
+                const headers = { Authorization: `Bearer ${accessToken}` };
+                const incomesResponse = await fetch(
+                    'https://money-money.azurewebsites.net/api/v1/money-money/users/incomes',
+                    { headers },
+                );
+                const expensesResponse = await fetch(
+                    'https://money-money.azurewebsites.net/api/v1/money-money/users/expenses',
+                    { headers },
+                );
+
+                if (!incomesResponse.ok || !expensesResponse.ok) {
+                    throw new Error('Error fetching data');
+                }
+
+                const incomes = await incomesResponse.json();
+                const expenses = await expensesResponse.json();
+
+                const allTransactions = [...incomes, ...expenses];
+                setTransactions(allTransactions);
+
+                const newCategories = allTransactions.reduce((acc, transaction) => {
+                    if (transaction.incomeCategoryName && !acc.includes(transaction.incomeCategoryName)) {
+                        acc.push(transaction.incomeCategoryName);
+                    }
+                    if (transaction.expenseCategoryName && !acc.includes(transaction.expenseCategoryName)) {
+                        acc.push(transaction.expenseCategoryName);
+                    }
+                    return acc;
+                }, []);
+                setCategories(newCategories);
+
+                const amounts = allTransactions.reduce((acc, transaction) => {
+                    const category = transaction.incomeCategoryName || transaction.expenseCategoryName;
+                    acc[category] = (acc[category] || 0) + transaction.amount;
+                    return acc;
+                }, {});
+                setCategoryAmounts(amounts);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const handleToggleLayoutDetails = (transaction) => {
         setSelectedTransaction(transaction);
         setIsLayoutDetailsOpen(!isLayoutDetailsOpen);
-    };
-
-    const handleAddTransaction = (newTransaction) => {
-        // Cập nhật dữ liệu sau khi thêm mới giao dịch thành công
-        setTransactions((prevTransactions) => [...prevTransactions, newTransaction]);
     };
 
     const handleDeleteTransaction = (deletedTransactionId) => {
@@ -32,49 +74,16 @@ function TabContent({ icon, content }) {
         setIsLayoutDetailsOpen(false);
     };
 
-    const myHeaders = new Headers();
-    myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
+    const totalIncome = transactions
+        .filter((transaction) => transaction.incomeCategoryName)
+        .reduce((sum, transaction) => sum + transaction.amount, 0);
 
-    const requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow',
-    };
-
-    useEffect(() => {
-        fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/incomes', requestOptions)
-            .then((response) => response.json())
-            .then((data) => {
-                setTransactions(data);
-                console.log(data);
-                const newCategories = data.map((transaction) => transaction.incomeCategoryName);
-                setCategories((prevCategories) => {
-                    const uniqueCategories = Array.from(new Set([...prevCategories, ...newCategories]));
-                    return uniqueCategories;
-                });
-                // Đây là đoạn tính TotalMount và TotalIncome
-                const amounts = {};
-                data.forEach((transaction) => {
-                    if (amounts[transaction.incomeCategoryName]) {
-                        amounts[transaction.incomeCategoryName] += transaction.amount;
-                    } else {
-                        amounts[transaction.incomeCategoryName] = transaction.amount;
-                    }
-                });
-                setCategoryAmounts(amounts);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
-    }, []);
-
-    const totalIncome = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+    const totalExpenses = transactions
+        .filter((transaction) => transaction.expenseCategoryName)
+        .reduce((sum, transaction) => sum + transaction.amount, 0);
 
     return (
         <div className="container">
-            {/* {icon && icon}
-            <span>{content}</span> */}
-
             <div className="bodyTop">
                 <div className="bodyDetail">
                     <span>Tiền vào</span>
@@ -82,7 +91,7 @@ function TabContent({ icon, content }) {
                 </div>
                 <div className="bodyDetail">
                     <span>Tiền ra</span>
-                    <p className="tienRa">-123</p>
+                    <p className="tienRa">-{totalExpenses}</p>
                 </div>
                 <div className="bodyDetail">
                     <span></span>
@@ -94,40 +103,44 @@ function TabContent({ icon, content }) {
                 <div className="bodyBot">
                     {categories.map((category) => {
                         const categoryTransactions = transactions.filter(
-                            (transaction) => transaction.incomeCategoryName === category,
+                            (transaction) =>
+                                transaction.incomeCategoryName === category ||
+                                transaction.expenseCategoryName === category,
                         );
+
                         return (
                             <div key={category} className="bodyDetail">
+                                <div className="titleBody">
+                                    <div className="miniTitle">
+                                        <Avatar />
+                                        <div className="dichVu">
+                                            <span className="incomeCategoryName">{category}</span>
+                                            <p>{categoryTransactions.length} Transactions</p>
+                                        </div>
+                                    </div>
+                                    <div className="totalAmount">{categoryAmounts[category]}</div>
+                                </div>
                                 {categoryTransactions.map((transaction, index) => (
-                                    <React.Fragment key={index}>
-                                        {index === 0 && (
-                                            <div className="titleBody">
-                                                <div className="miniTitle">
-                                                    <Avatar />
-                                                    <div className="dichVu">
-                                                        <span className="incomeCategoryName">
-                                                            {transaction.incomeCategoryName}
-                                                        </span>
-                                                        <p>{categoryTransactions.length} Transactions</p>
-                                                    </div>
-                                                </div>
-                                                <div className="totalAmount">{categoryAmounts[category]}</div>
+                                    <button
+                                        key={index}
+                                        className="detailChild"
+                                        onClick={() => handleToggleLayoutDetails(transaction)}
+                                    >
+                                        <div className="miniTitle">
+                                            <span className="date">{transaction.date?.slice(8, 10)}</span>
+                                            <div className="dichVu">
+                                                <p className="dateMonthYear">{transaction.date?.split('T')[0]}</p>
+                                                <p className="description">{transaction.description}</p>
                                             </div>
-                                        )}
-                                        <button
-                                            className="detailChild"
-                                            onClick={() => handleToggleLayoutDetails(transaction)}
+                                        </div>
+                                        <p
+                                            className={`amount ${
+                                                transaction.incomeCategoryName ? 'income' : 'expense'
+                                            }`}
                                         >
-                                            <div className="miniTitle">
-                                                <span className="date">{transaction.date?.slice(8, 10)}</span>
-                                                <div className="dichVu">
-                                                    <p className="dateMonthYear">{transaction.date?.split('T')[0]}</p>
-                                                    <p className="description">{transaction.description}</p>
-                                                </div>
-                                            </div>
-                                            <p className="amount">{transaction.amount}</p>
-                                        </button>
-                                    </React.Fragment>
+                                            {transaction.amount}
+                                        </p>
+                                    </button>
                                 ))}
                             </div>
                         );
