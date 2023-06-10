@@ -82,20 +82,24 @@ function TabContent({ icon, content }) {
         .filter((transaction) => transaction.expenseCategoryName)
         .reduce((sum, transaction) => sum + transaction.amount, 0);
 
+    const overallTotal = totalIncome - totalExpenses;
+    const sign = overallTotal >= 0 ? '+' : '-';
+    const formattedOverallTotal = `${sign}${Math.abs(overallTotal).toLocaleString()}`;
+
     return (
         <div className="container">
             <div className="bodyTop">
                 <div className="bodyDetail">
                     <span>Tiền vào</span>
-                    <p className="tienVao">{totalIncome}</p>
+                    <p className="tienVao">{totalIncome.toLocaleString()}</p>
                 </div>
                 <div className="bodyDetail">
                     <span>Tiền ra</span>
-                    <p className="tienRa">-{totalExpenses}</p>
+                    <p className="tienRa">-{totalExpenses.toLocaleString()}</p>
                 </div>
                 <div className="bodyDetail">
                     <span></span>
-                    <p className="lineTop">-123</p>
+                    <p className="lineTop">{formattedOverallTotal}</p>
                 </div>
                 <Button className="btnBaocao" small to={config.routes.BaoCao}>
                     XEM BÁO CÁO GIAI ĐOẠN NÀY
@@ -118,7 +122,7 @@ function TabContent({ icon, content }) {
                                             <p>{categoryTransactions.length} Transactions</p>
                                         </div>
                                     </div>
-                                    <div className="totalAmount">{categoryAmounts[category]}</div>
+                                    <div className="totalAmount">{categoryAmounts[category].toLocaleString()}</div>
                                 </div>
                                 {categoryTransactions.map((transaction, index) => (
                                     <button
@@ -138,7 +142,7 @@ function TabContent({ icon, content }) {
                                                 transaction.incomeCategoryName ? 'income' : 'expense'
                                             }`}
                                         >
-                                            {transaction.amount}
+                                            {transaction.amount.toLocaleString()}
                                         </p>
                                     </button>
                                 ))}
