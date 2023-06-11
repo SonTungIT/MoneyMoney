@@ -12,6 +12,9 @@ function SoGiaoDich() {
     const [categories, setCategories] = useState([]);
     const [categoryAmounts, setCategoryAmounts] = useState({});
     const [selectedTransaction, setSelectedTransaction] = useState(null);
+    const [totalIncomeM, setTotalIncome] = useState(0);
+    const [totalExpenseM, setTotalExpense] = useState(0);
+    const [totalProfitM, setTotalProfit] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,6 +61,45 @@ function SoGiaoDich() {
                 console.error('Error fetching data:', error);
             }
         };
+
+        const token = localStorage.getItem('accessToken');
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + token,
+            },
+            redirect: 'follow',
+        };
+
+        fetch(
+            'https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/total-by-month?date=2023%2F06%2F12',
+            requestOptions,
+        )
+            .then((response) => response.json())
+            .then((result) => {
+                setTotalIncome(result.toLocaleString());
+            })
+            .catch((error) => console.log('error', error));
+
+        fetch(
+            'https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/total-by-month?date=2023%2F06%2F12',
+            requestOptions,
+        )
+            .then((response) => response.json())
+            .then((result) => {
+                setTotalExpense(result.toLocaleString());
+            })
+            .catch((error) => console.log('error', error));
+
+        fetch(
+            'https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=2023%2F06%2F11',
+            requestOptions,
+        )
+            .then((response) => response.json())
+            .then((result) => {
+                setTotalProfit(result.toLocaleString());
+            })
+            .catch((error) => console.log('error', error));
 
         fetchData();
     }, []);
@@ -228,37 +270,15 @@ function SoGiaoDich() {
                             <div className="bodyTop">
                                 <div className="bodyDetail">
                                     <span>Tiền vào</span>
-                                    <p className="tienVao">
-                                        {transactions
-                                            .filter(
-                                                (transaction) =>
-                                                    transaction.incomeCategoryName &&
-                                                    new Date(transaction.date).getMonth() === new Date().getMonth() &&
-                                                    new Date(transaction.date).getFullYear() ===
-                                                        new Date().getFullYear(),
-                                            )
-                                            .reduce((sum, transaction) => sum + transaction.amount, 0)
-                                            .toLocaleString()}
-                                    </p>
+                                    <p className="tienVao">{totalIncomeM}</p>
                                 </div>
                                 <div className="bodyDetail">
                                     <span>Tiền ra</span>
-                                    <p className="tienRa">
-                                        {transactions
-                                            .filter(
-                                                (transaction) =>
-                                                    transaction.expenseCategoryName &&
-                                                    new Date(transaction.date).getMonth() === new Date().getMonth() &&
-                                                    new Date(transaction.date).getFullYear() ===
-                                                        new Date().getFullYear(),
-                                            )
-                                            .reduce((sum, transaction) => sum + transaction.amount, 0)
-                                            .toLocaleString()}
-                                    </p>
+                                    <p className="tienRa">{totalExpenseM}</p>
                                 </div>
                                 <div className="bodyDetail">
                                     <span></span>
-                                    <p className="lineTop">{formattedOverallTotal}</p>
+                                    <p className="lineTop">{totalProfitM}</p>
                                 </div>
                                 <Button className="btnBaocao" small to={config.routes.BaoCao}>
                                     XEM BÁO CÁO GIAI ĐOẠN NÀY
