@@ -52,7 +52,9 @@
     }
 
     .btnBaocao {
-        z-index: 9;
+        font-size: 20px;
+        margin-bottom: 20px;
+        border: none;
 
         :hover {
             color: var(--primary);
@@ -178,4 +180,10 @@
             background-color: var(--primary);
         }
     }
+}
+
+.no-transaction {
+    @include flex(center, space-between, column);
+    margin-top: 40px;
+    font-size: 30px;
 }
