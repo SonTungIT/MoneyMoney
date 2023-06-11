@@ -9,4 +9,30 @@
     align-items: start;
 
     margin-top: 10px;
+
+    .openingBalance {
+        width: 50%;
+        text-align: center;
+    }
+
+    .endingBalance {
+        width: 50%;
+        text-align: center;
+    }
+
+    .title {
+        color: #666;
+    }
+
+    .totalO {
+        margin-top: 10px;
+        font-size: 20px;
+        font-weight: 400;
+    }
+
+    .totalE {
+        margin-top: 10px;
+        font-size: 20px;
+        font-weight: 400;
+    }
 }
