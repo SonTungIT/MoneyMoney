@@ -16,8 +16,8 @@ function BaoCao() {
     const [totalExpenseM, setTotalExpense] = useState(0);
 
     useEffect(() => {
-        fetchTotalByYear('incomes');
-        fetchTotalByYear('expenses');
+        fetchTotalByMonth('incomes');
+        fetchTotalByMonth('expenses');
         fetchTotalProfit();
     }, []);
 
@@ -25,7 +25,16 @@ function BaoCao() {
         updateOpeningBalance();
     }, [incomeTotal, expenseTotal, totalProfitM]);
 
-    const fetchTotalByYear = (category) => {
+    // const fetchTotalByYear = (category) => {
+    //     const token = localStorage.getItem('accessToken');
+    //     const requestOptions = {
+    //         method: 'GET',
+    //         headers: {
+    //             Authorization: 'Bearer ' + token,
+    //         },
+    //         redirect: 'follow',
+    //     };
+    const fetchTotalByMonth = (category) => {
         const token = localStorage.getItem('accessToken');
         const requestOptions = {
             method: 'GET',
@@ -34,12 +43,16 @@ function BaoCao() {
             },
             redirect: 'follow',
         };
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
 
         fetch(
-            `https://money-money.azurewebsites.net/api/v1/money-money/users/${category}/total-by-year?year=2023`,
+            //`https://money-money.azurewebsites.net/api/v1/money-money/users/${category}/total-by-year?year=2023`,
+            `https://money-money.azurewebsites.net/api/v1/money-money/users/${category}/total-by-month?date=${year}%2F${month}%2F01`,
             requestOptions,
         )
-            .then((response) => response.text())
+            .then((response) => response.json())
             .then((result) => {
                 if (category === 'incomes') {
                     setIncomeTotal(result);
@@ -59,6 +72,9 @@ function BaoCao() {
             },
             redirect: 'follow',
         };
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
 
         fetch(
             'https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=2023%2F06%2F11',
@@ -92,7 +108,8 @@ function BaoCao() {
     };
 
     const updateOpeningBalance = () => {
-        setOpeningBalance(incomeTotal - expenseTotal - totalProfitM);
+        const calculatedBalance = incomeTotal - expenseTotal - totalProfitM;
+        setOpeningBalance(calculatedBalance);
     };
 
     const formatCurrency = (value) => {
@@ -100,9 +117,8 @@ function BaoCao() {
         return value >= 0 ? '+' + formattedValue : formattedValue;
     };
 
-    // column chart
     useEffect(() => {
-        const data = [{ day: '1-4', income: incomeTotal, expense: expenseTotal }];
+        const data = [{ month: 'Tháng này', income: incomeTotal, expense: expenseTotal }];
         setChartData(data);
     }, [incomeTotal, expenseTotal]);
 
@@ -122,10 +138,9 @@ function BaoCao() {
                     <p className={cx('totalN')}>{formatCurrency(totalProfitM)}</p>
                     <div className={cx('columnChart')}>
                         <BarChart width={500} height={300} data={chartData}>
-                            <XAxis dataKey="day" />
+                            <XAxis dataKey="month" />
                             <YAxis />
                             <Tooltip />
-                            {/* <Legend /> */}
                             <Bar dataKey="income" fill="#00b3ff" name="Tổng khoản thu" />
                             <Bar dataKey="expense" fill="#ff0044c6" name="Tổng khoản chi" />
                         </BarChart>
