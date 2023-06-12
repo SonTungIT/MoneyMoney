@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import LayoutUser from '../LayoutUser';
 import styles from './BaoCao.scss';
-import RevenuePieChart from './RevenuePieChart/RevenuePieChart';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 const cx = classNames.bind(styles);
 
@@ -11,6 +11,9 @@ function BaoCao() {
     const [expenseTotal, setExpenseTotal] = useState(0);
     const [totalProfitM, setTotalProfit] = useState(0);
     const [openingBalance, setOpeningBalance] = useState(0);
+    const [chartData, setChartData] = useState([]);
+    const [totalIncomeM, setTotalIncome] = useState(0);
+    const [totalExpenseM, setTotalExpense] = useState(0);
 
     useEffect(() => {
         fetchTotalByYear('incomes');
@@ -66,6 +69,26 @@ function BaoCao() {
                 setTotalProfit(result);
             })
             .catch((error) => console.log('error', error));
+
+        fetch(
+            'https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/total-by-month?date=2023%2F06%2F12',
+            requestOptions,
+        )
+            .then((response) => response.json())
+            .then((result) => {
+                setTotalIncome(result.toLocaleString());
+            })
+            .catch((error) => console.log('error', error));
+
+        fetch(
+            'https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/total-by-month?date=2023%2F06%2F12',
+            requestOptions,
+        )
+            .then((response) => response.json())
+            .then((result) => {
+                setTotalExpense(result.toLocaleString());
+            })
+            .catch((error) => console.log('error', error));
     };
 
     const updateOpeningBalance = () => {
@@ -73,8 +96,15 @@ function BaoCao() {
     };
 
     const formatCurrency = (value) => {
-        return value.toLocaleString('vi-VN');
+        const formattedValue = value.toLocaleString('vi-VN');
+        return value >= 0 ? '+' + formattedValue : formattedValue;
     };
+
+    // column chart
+    useEffect(() => {
+        const data = [{ day: '1-4', income: incomeTotal, expense: expenseTotal }];
+        setChartData(data);
+    }, [incomeTotal, expenseTotal]);
 
     return (
         <LayoutUser>
@@ -86,6 +116,20 @@ function BaoCao() {
                 <div className={cx('endingBalance')}>
                     <div className={cx('title')}>Số dư cuối</div>
                     <p className={cx('totalE')}>{formatCurrency(incomeTotal - expenseTotal)}</p>
+                </div>
+                <div className={cx('netIncome')}>
+                    <div className={cx('title')}>Thu nhập ròng</div>
+                    <p className={cx('totalN')}>{formatCurrency(totalProfitM)}</p>
+                    <div className={cx('columnChart')}>
+                        <BarChart width={500} height={300} data={chartData}>
+                            <XAxis dataKey="day" />
+                            <YAxis />
+                            <Tooltip />
+                            {/* <Legend /> */}
+                            <Bar dataKey="income" fill="#00b3ff" name="Tổng khoản thu" />
+                            <Bar dataKey="expense" fill="#ff0044c6" name="Tổng khoản chi" />
+                        </BarChart>
+                    </div>
                 </div>
             </div>
         </LayoutUser>

@@ -115,15 +115,6 @@ function SoGiaoDich() {
         setIsLayoutDetailsOpen(false);
     };
 
-    //Total của tháng này
-    const totalIncome = transactions
-        .filter((transaction) => transaction.incomeCategoryName)
-        .reduce((sum, transaction) => sum + transaction.amount, 0);
-
-    const totalExpenses = transactions
-        .filter((transaction) => transaction.expenseCategoryName)
-        .reduce((sum, transaction) => sum + transaction.amount, 0);
-
     //Total của tháng trước
     const totalIncomeLastMonth = transactions
         .filter((transaction) => new Date(transaction.date).getMonth() === 4 && transaction.incomeCategoryName)
@@ -136,10 +127,6 @@ function SoGiaoDich() {
     const overallTotalLastMonth = totalIncomeLastMonth - totalExpensesLastMonth;
     const signLastMonth = overallTotalLastMonth >= 0 ? '+' : '-';
     const formattedOverallTotalLastMonth = `${signLastMonth}${Math.abs(overallTotalLastMonth).toLocaleString()}`;
-
-    const overallTotal = totalIncome - totalExpenses;
-    const sign = overallTotal >= 0 ? '+' : '-';
-    const formattedOverallTotal = `${sign}${Math.abs(overallTotal).toLocaleString()}`;
 
     let categoryTotals = {};
     // Trước khi render các giao dịch

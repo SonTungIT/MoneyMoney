@@ -1,12 +1,12 @@
 @use '../../../styles/' as *;
 
 .wrapper {
-    height: 410px;
     width: 600px;
 
     display: flex;
     justify-content: space-around;
     align-items: start;
+    flex-wrap: wrap;
 
     margin-top: 10px;
 
@@ -22,17 +22,39 @@
 
     .title {
         color: #666;
+        margin-top: 10px;
     }
 
     .totalO {
-        margin-top: 10px;
         font-size: 20px;
         font-weight: 400;
     }
 
     .totalE {
-        margin-top: 10px;
         font-size: 20px;
         font-weight: 400;
+    }
+
+    .netIncome {
+        @include flex(center, center, column);
+        height: auto;
+        width: 100%;
+        border-top: 1px solid #999;
+        margin-top: 10px;
+        background-color: #fff;
+
+        .totalN {
+            margin-top: 5px;
+            font-size: 30px;
+            font-weight: 400;
+        }
+
+        .columnChart {
+            width: 100%;
+        }
+
+        .recharts-surface {
+            width: 120% !important;
+        }
     }
 }
