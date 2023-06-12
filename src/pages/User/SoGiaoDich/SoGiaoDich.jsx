@@ -16,19 +16,19 @@ function SoGiaoDich() {
     const [totalExpenseM, setTotalExpense] = useState(0);
     const [totalProfitM, setTotalProfit] = useState(0);
 
+    const [openingBalance, setOpeningBalance] = useState(0);
+    const [endingBalance, setEndingBalance] = useState(0);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const accessToken = localStorage.getItem('accessToken');
                 const headers = { Authorization: `Bearer ${accessToken}` };
-                const incomesResponse = await fetch(
-                    'https://money-money.azurewebsites.net/api/v1/money-money/users/incomes',
-                    { headers },
-                );
-                const expensesResponse = await fetch(
-                    'https://money-money.azurewebsites.net/api/v1/money-money/users/expenses',
-                    { headers },
-                );
+
+                const [incomesResponse, expensesResponse] = await Promise.all([
+                    fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/incomes', { headers }),
+                    fetch('https://money-money.azurewebsites.net/api/v1/money-money/users/expenses', { headers }),
+                ]);
 
                 if (!incomesResponse.ok || !expensesResponse.ok) {
                     throw new Error('Error fetching data');
@@ -57,6 +57,61 @@ function SoGiaoDich() {
                     return acc;
                 }, {});
                 setCategoryAmounts(amounts);
+
+                // Fetching total income
+                fetch(
+                    'https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/total-by-month?date=2023%2F06%2F12',
+                    requestOptions,
+                )
+                    .then((response) => response.json())
+                    .then((result) => {
+                        setTotalIncome(result.toLocaleString());
+                    })
+                    .catch((error) => console.log('error', error));
+
+                // Fetching total expense
+                fetch(
+                    'https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/total-by-month?date=2023%2F06%2F12',
+                    requestOptions,
+                )
+                    .then((response) => response.json())
+                    .then((result) => {
+                        setTotalExpense(result.toLocaleString());
+                    })
+                    .catch((error) => console.log('error', error));
+
+                // Fetching total profit
+                fetch(
+                    'https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=2023%2F06%2F11',
+                    requestOptions,
+                )
+                    .then((response) => response.json())
+                    .then((result) => {
+                        setTotalProfit(result.toLocaleString());
+                    })
+                    .catch((error) => console.log('error', error));
+
+                // Fetching opening balance
+                fetch(
+                    `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/starting-balance/06/2023`,
+                    requestOptions,
+                )
+                    .then((response) => response.text())
+                    .then((result) => {
+                        setOpeningBalance(result);
+                    })
+                    .catch((error) => console.log('error', error));
+
+                // Fetching ending balance
+                fetch(
+                    `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/ending-balance/05/2023`,
+                    requestOptions,
+                )
+                    .then((response) => response.text())
+                    .then((result) => {
+                        setEndingBalance(result);
+                    })
+                    .catch((error) => console.log('error', error));
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -70,36 +125,6 @@ function SoGiaoDich() {
             },
             redirect: 'follow',
         };
-
-        fetch(
-            'https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/total-by-month?date=2023%2F06%2F12',
-            requestOptions,
-        )
-            .then((response) => response.json())
-            .then((result) => {
-                setTotalIncome(result.toLocaleString());
-            })
-            .catch((error) => console.log('error', error));
-
-        fetch(
-            'https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/total-by-month?date=2023%2F06%2F12',
-            requestOptions,
-        )
-            .then((response) => response.json())
-            .then((result) => {
-                setTotalExpense(result.toLocaleString());
-            })
-            .catch((error) => console.log('error', error));
-
-        fetch(
-            'https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=2023%2F06%2F11',
-            requestOptions,
-        )
-            .then((response) => response.json())
-            .then((result) => {
-                setTotalProfit(result.toLocaleString());
-            })
-            .catch((error) => console.log('error', error));
 
         fetchData();
     }, []);
@@ -158,6 +183,10 @@ function SoGiaoDich() {
                     ) : (
                         <div className="container">
                             <div className="bodyTop">
+                                <div className="bodyDetail">
+                                    <span>Số dư cuối</span>
+                                    <p className="totalO">{endingBalance}</p>
+                                </div>
                                 <div className="bodyDetail">
                                     <span>Tiền vào</span>
                                     <p className="tienVao">{totalIncomeLastMonth.toLocaleString()}</p>
@@ -255,6 +284,10 @@ function SoGiaoDich() {
                     ) : (
                         <div className="container">
                             <div className="bodyTop">
+                                <div className="bodyDetail">
+                                    <span>Số dư đầu</span>
+                                    <p className="totalO">{openingBalance}</p>
+                                </div>
                                 <div className="bodyDetail">
                                     <span>Tiền vào</span>
                                     <p className="tienVao">{totalIncomeM}</p>

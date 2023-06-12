@@ -3,6 +3,8 @@ import classNames from 'classnames/bind';
 import LayoutUser from '../LayoutUser';
 import styles from './BaoCao.scss';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const cx = classNames.bind(styles);
 
@@ -11,30 +13,18 @@ function BaoCao() {
     const [expenseTotal, setExpenseTotal] = useState(0);
     const [totalProfitM, setTotalProfit] = useState(0);
     const [openingBalance, setOpeningBalance] = useState(0);
+    const [endingBalance, setEndingBalance] = useState(0);
+
     const [chartData, setChartData] = useState([]);
-    const [totalIncomeM, setTotalIncome] = useState(0);
-    const [totalExpenseM, setTotalExpense] = useState(0);
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     useEffect(() => {
-        fetchTotalByMonth('incomes');
-        fetchTotalByMonth('expenses');
-        fetchTotalProfit();
-    }, []);
+        fetchTotalByMonth('incomes', selectedDate);
+        fetchTotalByMonth('expenses', selectedDate);
+        fetchTotalProfit(selectedDate);
+    }, [selectedDate]);
 
-    useEffect(() => {
-        updateOpeningBalance();
-    }, [incomeTotal, expenseTotal, totalProfitM]);
-
-    // const fetchTotalByYear = (category) => {
-    //     const token = localStorage.getItem('accessToken');
-    //     const requestOptions = {
-    //         method: 'GET',
-    //         headers: {
-    //             Authorization: 'Bearer ' + token,
-    //         },
-    //         redirect: 'follow',
-    //     };
-    const fetchTotalByMonth = (category) => {
+    const fetchTotalByMonth = (category, date) => {
         const token = localStorage.getItem('accessToken');
         const requestOptions = {
             method: 'GET',
@@ -43,12 +33,11 @@ function BaoCao() {
             },
             redirect: 'follow',
         };
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth() + 1;
+
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
 
         fetch(
-            //`https://money-money.azurewebsites.net/api/v1/money-money/users/${category}/total-by-year?year=2023`,
             `https://money-money.azurewebsites.net/api/v1/money-money/users/${category}/total-by-month?date=${year}%2F${month}%2F01`,
             requestOptions,
         )
@@ -63,7 +52,7 @@ function BaoCao() {
             .catch((error) => console.log('Error:', error));
     };
 
-    const fetchTotalProfit = () => {
+    const fetchTotalProfit = (date) => {
         const token = localStorage.getItem('accessToken');
         const requestOptions = {
             method: 'GET',
@@ -72,44 +61,30 @@ function BaoCao() {
             },
             redirect: 'follow',
         };
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth() + 1;
 
-        fetch(
-            'https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=2023%2F06%2F11',
-            requestOptions,
-        )
-            .then((response) => response.json())
-            .then((result) => {
-                setTotalProfit(result);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+
+        Promise.all([
+            fetch(
+                `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=${year}%2F${month}%2F01`,
+                requestOptions,
+            ).then((response) => response.json()),
+            fetch(
+                `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/starting-balance/${month}/${year}`,
+                requestOptions,
+            ).then((response) => response.text()),
+            fetch(
+                `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/ending-balance/${month}/${year}`,
+                requestOptions,
+            ).then((response) => response.text()),
+        ])
+            .then(([totalProfit, startingBalance, endingBalance]) => {
+                setTotalProfit(totalProfit);
+                setOpeningBalance(startingBalance);
+                setEndingBalance(endingBalance);
             })
             .catch((error) => console.log('error', error));
-
-        fetch(
-            'https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/total-by-month?date=2023%2F06%2F12',
-            requestOptions,
-        )
-            .then((response) => response.json())
-            .then((result) => {
-                setTotalIncome(result.toLocaleString());
-            })
-            .catch((error) => console.log('error', error));
-
-        fetch(
-            'https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/total-by-month?date=2023%2F06%2F12',
-            requestOptions,
-        )
-            .then((response) => response.json())
-            .then((result) => {
-                setTotalExpense(result.toLocaleString());
-            })
-            .catch((error) => console.log('error', error));
-    };
-
-    const updateOpeningBalance = () => {
-        const calculatedBalance = incomeTotal - expenseTotal - totalProfitM;
-        setOpeningBalance(calculatedBalance);
     };
 
     const formatCurrency = (value) => {
@@ -124,6 +99,15 @@ function BaoCao() {
 
     return (
         <LayoutUser>
+            <div className={cx('calendar')}>
+                <DatePicker
+                    selected={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
+                    dateFormat="MM/yyyy"
+                    showMonthYearPicker
+                    className={cx('datePicker')}
+                />
+            </div>
             <div className={cx('wrapper')}>
                 <div className={cx('openingBalance')}>
                     <div className={cx('title')}>Số dư đầu</div>
@@ -131,16 +115,18 @@ function BaoCao() {
                 </div>
                 <div className={cx('endingBalance')}>
                     <div className={cx('title')}>Số dư cuối</div>
-                    <p className={cx('totalE')}>{formatCurrency(incomeTotal - expenseTotal)}</p>
+                    <p className={cx('totalE')}>{formatCurrency(endingBalance)}</p>
                 </div>
                 <div className={cx('netIncome')}>
-                    <div className={cx('title')}>Thu nhập ròng</div>
+                    <div className={cx('title')}>Thu nhập tháng này</div>
                     <p className={cx('totalN')}>{formatCurrency(totalProfitM)}</p>
                     <div className={cx('columnChart')}>
-                        <BarChart width={500} height={300} data={chartData}>
+                        <BarChart width={500} height={400} data={chartData}>
+                            <CartesianGrid stroke="#ccc" />
                             <XAxis dataKey="month" />
                             <YAxis />
                             <Tooltip />
+                            <Legend />
                             <Bar dataKey="income" fill="#00b3ff" name="Tổng khoản thu" />
                             <Bar dataKey="expense" fill="#ff0044c6" name="Tổng khoản chi" />
                         </BarChart>
