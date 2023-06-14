@@ -5,6 +5,8 @@ import config from '~/config';
 import LayoutUser from '../LayoutUser';
 import LayoutDetails from '../LayoutDetails';
 import styles from './SoGiaoDich.scss';
+import { DatePicker } from 'antd';
+import moment from 'moment';
 
 function SoGiaoDich() {
     const [isLayoutDetailsOpen, setIsLayoutDetailsOpen] = useState(false);
@@ -18,6 +20,12 @@ function SoGiaoDich() {
 
     const [openingBalance, setOpeningBalance] = useState(0);
     const [endingBalance, setEndingBalance] = useState(0);
+
+    const currentDate = new Date();
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
+
+    const [selectedMonth, setSelectedMonth] = useState(moment().subtract(1, 'month'));
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,9 +66,8 @@ function SoGiaoDich() {
                 }, {});
                 setCategoryAmounts(amounts);
 
-                // Fetching total income
                 fetch(
-                    'https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/total-by-month?date=2023%2F06%2F12',
+                    `https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/total-incomes-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.json())
@@ -71,7 +78,7 @@ function SoGiaoDich() {
 
                 // Fetching total expense
                 fetch(
-                    'https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/total-by-month?date=2023%2F06%2F12',
+                    `https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/total-expenses-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.json())
@@ -82,7 +89,7 @@ function SoGiaoDich() {
 
                 // Fetching total profit
                 fetch(
-                    'https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=2023%2F06%2F11',
+                    `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-profits-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.json())
@@ -93,7 +100,7 @@ function SoGiaoDich() {
 
                 // Fetching opening balance
                 fetch(
-                    `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/starting-balance/06/2023`,
+                    `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/starting-balance/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.text())
@@ -104,7 +111,7 @@ function SoGiaoDich() {
 
                 // Fetching ending balance
                 fetch(
-                    `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/ending-balance/05/2023`,
+                    `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/ending-balance/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.text())
@@ -127,7 +134,7 @@ function SoGiaoDich() {
         };
 
         fetchData();
-    }, []);
+    }, [selectedMonth]);
 
     const handleToggleLayoutDetails = (transaction) => {
         setSelectedTransaction(transaction);
@@ -141,17 +148,6 @@ function SoGiaoDich() {
     };
 
     //Total của tháng trước
-    const totalIncomeLastMonth = transactions
-        .filter((transaction) => new Date(transaction.date).getMonth() === 4 && transaction.incomeCategoryName)
-        .reduce((total, transaction) => total + transaction.amount, 0);
-
-    const totalExpensesLastMonth = transactions
-        .filter((transaction) => new Date(transaction.date).getMonth() === 4 && transaction.expenseCategoryName)
-        .reduce((total, transaction) => total + transaction.amount, 0);
-
-    const overallTotalLastMonth = totalIncomeLastMonth - totalExpensesLastMonth;
-    const signLastMonth = overallTotalLastMonth >= 0 ? '+' : '-';
-    const formattedOverallTotalLastMonth = `${signLastMonth}${Math.abs(overallTotalLastMonth).toLocaleString()}`;
 
     let categoryTotals = {};
     // Trước khi render các giao dịch
@@ -171,10 +167,27 @@ function SoGiaoDich() {
         }
     });
 
+    const handleTabChange = (key) => {
+        if (key === '2') {
+            setIsLayoutDetailsOpen(false);
+            setSelectedMonth(moment().subtract(1, 'month'));
+        }
+    };
+
+    const handleMonthChange = (date) => {
+        setSelectedMonth(date);
+    };
+
     return (
         <LayoutUser>
-            <Tabs defaultActiveKey="1" onChange={() => {}} className="header">
+            <Tabs defaultActiveKey="1" onChange={handleTabChange} className="header">
                 <Tabs.TabPane tab="THÁNG TRƯỚC" key="2">
+                    <DatePicker
+                        value={selectedMonth}
+                        onChange={(date) => setSelectedMonth(date)}
+                        picker="month"
+                        className="month-picker"
+                    />
                     {Object.entries(categoryTotals[4] || {}).length === 0 ? (
                         <div className="no-transaction">
                             <IconSad />
@@ -189,15 +202,15 @@ function SoGiaoDich() {
                                 </div>
                                 <div className="bodyDetail">
                                     <span>Tiền vào</span>
-                                    <p className="tienVao">{totalIncomeLastMonth.toLocaleString()}</p>
+                                    <p className="tienVao">{totalIncomeM}</p>
                                 </div>
                                 <div className="bodyDetail">
                                     <span>Tiền ra</span>
-                                    <p className="tienRa">-{totalExpensesLastMonth.toLocaleString()}</p>
+                                    <p className="tienRa">-{totalExpenseM}</p>
                                 </div>
                                 <div className="bodyDetail">
                                     <span></span>
-                                    <p className="lineTop">{formattedOverallTotalLastMonth}</p>
+                                    <p className="lineTop">{totalProfitM}</p>
                                 </div>
                                 <Button className="btnBaocao" small to={config.routes.BaoCao}>
                                     XEM BÁO CÁO GIAI ĐOẠN NÀY

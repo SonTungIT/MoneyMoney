@@ -93,9 +93,11 @@ function BaoCao() {
     };
 
     useEffect(() => {
-        const data = [{ month: 'Tháng này', income: incomeTotal, expense: expenseTotal }];
+        const data = [{ month: `Tháng ${selectedMonth}`, income: incomeTotal, expense: expenseTotal }];
         setChartData(data);
     }, [incomeTotal, expenseTotal]);
+
+    const selectedMonth = selectedDate.getMonth() + 1;
 
     return (
         <LayoutUser>
@@ -118,7 +120,7 @@ function BaoCao() {
                     <p className={cx('totalE')}>{formatCurrency(endingBalance)}</p>
                 </div>
                 <div className={cx('netIncome')}>
-                    <div className={cx('title')}>Thu nhập tháng này</div>
+                    <div className={cx('title')}>Lợi nhuận tháng {selectedMonth}</div>
                     <p className={cx('totalN')}>{formatCurrency(totalProfitM)}</p>
                     <div className={cx('columnChart')}>
                         <BarChart width={500} height={400} data={chartData}>
