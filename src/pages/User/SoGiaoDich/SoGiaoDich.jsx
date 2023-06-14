@@ -7,6 +7,7 @@ import LayoutDetails from '../LayoutDetails';
 import styles from './SoGiaoDich.scss';
 import { DatePicker } from 'antd';
 import moment from 'moment';
+import dayjs from 'dayjs';
 
 function SoGiaoDich() {
     const [isLayoutDetailsOpen, setIsLayoutDetailsOpen] = useState(false);
@@ -20,6 +21,7 @@ function SoGiaoDich() {
 
     const [openingBalance, setOpeningBalance] = useState(0);
     const [endingBalance, setEndingBalance] = useState(0);
+    const [filteredTransactions, setFilteredTransactions] = useState([]);
 
     const currentDate = new Date();
     const month = currentDate.getMonth();
@@ -170,12 +172,24 @@ function SoGiaoDich() {
     const handleTabChange = (key) => {
         if (key === '2') {
             setIsLayoutDetailsOpen(false);
-            setSelectedMonth(moment().subtract(1, 'month'));
+            const previousMonth = dayjs().subtract(1, 'month'); // Sử dụng dayjs() thay cho moment()
+            setSelectedMonth(previousMonth);
+            handleMonthChange(previousMonth);
         }
     };
-
     const handleMonthChange = (date) => {
-        setSelectedMonth(date);
+        const selectedMonth = dayjs(date).format('YYYY-MM'); // Sử dụng dayjs(date) thay cho moment(date)
+
+        setSelectedMonth(selectedMonth);
+
+        const selectedMonthTransactions = transactions.filter((transaction) => {
+            const transactionMonth = dayjs(transaction.date).format('YYYY-MM'); // Sử dụng dayjs(transaction.date) thay cho moment(transaction.date)
+
+            return selectedMonth === transactionMonth;
+        });
+
+        console.log(selectedMonthTransactions);
+        setFilteredTransactions(selectedMonthTransactions);
     };
 
     return (
@@ -183,8 +197,8 @@ function SoGiaoDich() {
             <Tabs defaultActiveKey="1" onChange={handleTabChange} className="header">
                 <Tabs.TabPane tab="THÁNG TRƯỚC" key="2">
                     <DatePicker
-                        value={selectedMonth}
-                        onChange={(date) => setSelectedMonth(date)}
+                        value={dayjs(selectedMonth)} // Chuyển đổi selectedMonth thành đối tượng Day.js bằng dayjs(selectedMonth)
+                        onChange={(date) => handleMonthChange(date)}
                         picker="month"
                         className="month-picker"
                     />
@@ -217,11 +231,10 @@ function SoGiaoDich() {
                                 </Button>
                                 <div className="bodyBot">
                                     {Object.entries(
-                                        transactions
+                                        filteredTransactions
                                             .filter(
                                                 (transaction) =>
-                                                    new Date(transaction.date).getMonth() < new Date().getMonth() &&
-                                                    (transaction.incomeCategoryName || transaction.expenseCategoryName),
+                                                    transaction.incomeCategoryName || transaction.expenseCategoryName,
                                             )
                                             .reduce((groupedTransactions, transaction) => {
                                                 const category =
