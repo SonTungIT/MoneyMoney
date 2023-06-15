@@ -23,10 +23,6 @@ function SoGiaoDich() {
     const [endingBalance, setEndingBalance] = useState(0);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
 
-    const currentDate = new Date();
-    const month = currentDate.getMonth();
-    const year = currentDate.getFullYear();
-
     const [selectedMonth, setSelectedMonth] = useState(moment().subtract(1, 'month'));
 
     useEffect(() => {
@@ -178,24 +174,36 @@ function SoGiaoDich() {
         }
     };
     const handleMonthChange = (date) => {
-        const selectedMonth = dayjs(date).format('YYYY-MM'); // Sử dụng dayjs(date) thay cho moment(date)
-
+        const selectedMonth = dayjs(date).format('YYYY-MM');
         setSelectedMonth(selectedMonth);
 
         const selectedMonthTransactions = transactions.filter((transaction) => {
-            const transactionMonth = dayjs(transaction.date).format('YYYY-MM'); // Sử dụng dayjs(transaction.date) thay cho moment(transaction.date)
-
+            const transactionMonth = dayjs(transaction.date).format('YYYY-MM');
             return selectedMonth === transactionMonth;
         });
-
-        console.log(selectedMonthTransactions);
         setFilteredTransactions(selectedMonthTransactions);
+
+        // Calculate total income for the selected month
+        const totalIncome = selectedMonthTransactions
+            .filter((transaction) => transaction.incomeCategoryName)
+            .reduce((sum, transaction) => sum + transaction.amount, 0);
+        setTotalIncome(totalIncome.toLocaleString());
+
+        // Calculate total expense for the selected month
+        const totalExpense = selectedMonthTransactions
+            .filter((transaction) => transaction.expenseCategoryName)
+            .reduce((sum, transaction) => sum + transaction.amount, 0);
+        setTotalExpense(totalExpense.toLocaleString());
+
+        // Calculate total profit for the selected month
+        const totalProfit = totalIncome - totalExpense;
+        setTotalProfit(totalProfit.toLocaleString());
     };
 
     return (
         <LayoutUser>
             <Tabs defaultActiveKey="1" onChange={handleTabChange} className="header">
-                <Tabs.TabPane tab="THÁNG TRƯỚC" key="2">
+                <Tabs.TabPane tab={`BÁO CÁO THEO THÁNG ${selectedMonth}`} key="1">
                     <DatePicker
                         value={dayjs(selectedMonth)} // Chuyển đổi selectedMonth thành đối tượng Day.js bằng dayjs(selectedMonth)
                         onChange={(date) => handleMonthChange(date)}
@@ -210,10 +218,10 @@ function SoGiaoDich() {
                     ) : (
                         <div className="container">
                             <div className="bodyTop">
-                                <div className="bodyDetail">
+                                {/* <div className="bodyDetail">
                                     <span>Số dư cuối</span>
                                     <p className="totalO">{endingBalance}</p>
-                                </div>
+                                </div> */}
                                 <div className="bodyDetail">
                                     <span>Tiền vào</span>
                                     <p className="tienVao">{totalIncomeM}</p>
@@ -298,105 +306,6 @@ function SoGiaoDich() {
                                     })}
                                 </div>
                             </div>
-                        </div>
-                    )}
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="THÁNG NÀY" key="1">
-                    {Object.entries(categoryTotals[5] || {}).length === 0 ? (
-                        <div className="no-transaction">
-                            <IconSad />
-                            Không có giao dịch
-                        </div>
-                    ) : (
-                        <div className="container">
-                            <div className="bodyTop">
-                                <div className="bodyDetail">
-                                    <span>Số dư đầu</span>
-                                    <p className="totalO">{openingBalance}</p>
-                                </div>
-                                <div className="bodyDetail">
-                                    <span>Tiền vào</span>
-                                    <p className="tienVao">{totalIncomeM}</p>
-                                </div>
-                                <div className="bodyDetail">
-                                    <span>Tiền ra</span>
-                                    <p className="tienRa">{totalExpenseM}</p>
-                                </div>
-                                <div className="bodyDetail">
-                                    <span></span>
-                                    <p className="lineTop">{totalProfitM}</p>
-                                </div>
-                                <Button className="btnBaocao" small to={config.routes.BaoCao}>
-                                    XEM BÁO CÁO GIAI ĐOẠN NÀY
-                                </Button>
-                                <div className="bodyBot">
-                                    {categories.map((category) => {
-                                        const categoryTransactions = transactions.filter(
-                                            (transaction) =>
-                                                (transaction.incomeCategoryName === category ||
-                                                    transaction.expenseCategoryName === category) &&
-                                                new Date(transaction.date).getMonth() === new Date().getMonth(),
-                                        );
-
-                                        return (
-                                            <div key={category} className="bodyDetail">
-                                                <div className="titleBody">
-                                                    <div className="miniTitle">
-                                                        <Avatar />
-                                                        <div className="dichVu">
-                                                            <span className="incomeCategoryName">{category}</span>
-                                                            <p>{categoryTransactions.length} Transactions</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="totalAmount">
-                                                        {categoryTransactions
-                                                            .reduce((sum, transaction) => sum + transaction.amount, 0)
-                                                            .toLocaleString()}
-                                                    </div>
-                                                </div>
-                                                {categoryTransactions.map((transaction, index) => (
-                                                    <button
-                                                        key={index}
-                                                        className="detailChild"
-                                                        onClick={() => handleToggleLayoutDetails(transaction)}
-                                                    >
-                                                        <div className="miniTitle">
-                                                            <span className="date">
-                                                                {transaction.date?.slice(8, 10)}
-                                                            </span>
-                                                            <div className="dichVu">
-                                                                <p className="dateMonthYear">
-                                                                    {transaction.date?.split('T')[0]}
-                                                                </p>
-                                                                <p className="description">{transaction.description}</p>
-                                                            </div>
-                                                        </div>
-                                                        <p
-                                                            className={`amount ${
-                                                                transaction.incomeCategoryName ? 'income' : 'expense'
-                                                            }`}
-                                                        >
-                                                            {transaction.amount.toLocaleString()}
-                                                        </p>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="TƯƠNG LAI" key="3">
-                    {transactions.length === 0 ? (
-                        <div className="no-transaction">
-                            <IconSad />
-                            Không có giao dịch
-                        </div>
-                    ) : (
-                        <div className="container">
-                            <div className="bodyTop">{/* Render transaction details */}</div>
                         </div>
                     )}
                 </Tabs.TabPane>
