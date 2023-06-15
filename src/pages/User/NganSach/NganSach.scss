@@ -1,0 +1,109 @@
+@use '../../../styles/' as *;
+
+.header {
+    color: #000;
+}
+
+.body {
+    height: auto;
+
+    .dangKy {
+        @include flex(center, space-evenly, column);
+        margin-bottom: 10px;
+        .sale {
+            @include flex(center, space-evenly, unset);
+            height: 30vh;
+            width: 100%;
+
+            .chonGoi {
+                @include flex(center, space-evenly, column);
+
+                height: 20vh;
+                width: 40%;
+                background-color: #e2e2e2a9;
+                border-radius: 30px;
+                border: none;
+                cursor: pointer;
+
+                .title {
+                    font-weight: 500;
+                }
+
+                .price {
+                    width: 60%;
+                    text-align: center;
+                    span {
+                        color: #ff8a00;
+                        font-size: 24px;
+                        font-weight: 500;
+                    }
+
+                    p {
+                        color: #555;
+                        font-size: 14px;
+                    }
+
+                    .btn-sale {
+                        width: 100%;
+                        padding: 5px 0;
+                        margin-top: 5px;
+                        color: #fff;
+                        background-color: #ff8a00;
+                        border-radius: 3px;
+                    }
+                }
+            }
+
+            .chonGoi:focus {
+                outline: 2px solid #ff8a00;
+            }
+        }
+
+        .btn-signup {
+            width: 86%;
+            padding: 10px 0;
+            border-radius: 20px;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .description {
+        @include flex(center, center, column);
+
+        height: 26vh;
+        width: 100%;
+        background-color: white;
+
+        .descriptionTop {
+            @include flex(center, space-evenly, unset);
+
+            height: 50%;
+            width: 90%;
+            padding: 20px;
+            font-size: 20px;
+            border-top: 2px solid #555;
+        }
+
+        .descriptionBot {
+            text-align: start;
+            height: 50%;
+            width: 90%;
+            color: #555;
+            font-size: 14px;
+            line-height: 20px;
+            border-top: 2px dashed #999;
+
+            p {
+                margin-top: 10px;
+                margin-left: 50px;
+            }
+        }
+    }
+
+    .tabpane {
+        height: 50vh;
+        border-top: 2px solid #555;
+        background-color: white;
+    }
+}

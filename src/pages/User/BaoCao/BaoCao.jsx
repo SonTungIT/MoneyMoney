@@ -88,8 +88,8 @@ function BaoCao() {
     };
 
     const formatCurrency = (value) => {
-        const formattedValue = value.toLocaleString('vi-VN');
-        return value >= 0 ? '+' + formattedValue : formattedValue;
+        const formatter = new Intl.NumberFormat('vi-VN');
+        return value >= 0 ? '+' + formatter.format(value) : formatter.format(value);
     };
 
     useEffect(() => {
