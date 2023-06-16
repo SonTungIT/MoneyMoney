@@ -205,7 +205,6 @@ function NganSach() {
                                     )}
                                 </Modal>
                             </>
-                            <p>Hủy bất cứ lúc nào</p>
                         </div>
                         <div className={cx('description')}>
                             <div className={cx('descriptionTop')}>
