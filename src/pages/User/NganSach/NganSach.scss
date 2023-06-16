@@ -19,7 +19,7 @@
                 @include flex(center, space-evenly, column);
 
                 height: 20vh;
-                width: 40%;
+                width: 30%;
                 background-color: #e2e2e2a9;
                 border-radius: 30px;
                 border: none;
@@ -34,8 +34,8 @@
                     text-align: center;
                     span {
                         color: #ff8a00;
-                        font-size: 24px;
-                        font-weight: 500;
+                        font-size: 22px;
+                        font-weight: 700;
                     }
 
                     p {
@@ -50,6 +50,7 @@
                         color: #fff;
                         background-color: #ff8a00;
                         border-radius: 3px;
+                        font-weight: 600;
                     }
                 }
             }
@@ -106,4 +107,9 @@
         border-top: 2px solid #555;
         background-color: white;
     }
+}
+
+.paymentQRCode {
+    width: 400px;
+    height: auto;
 }

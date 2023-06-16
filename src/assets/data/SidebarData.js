@@ -13,7 +13,7 @@ export const SidebarData = [
         icon: <IconBox />,
     },
     {
-        title: 'Ngân Sách',
+        title: 'Tiết Kiệm',
         path: config.routes.NganSach,
         icon: <Iconpaper />,
     },
