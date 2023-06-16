@@ -84,7 +84,7 @@ function ImportModal({ closeModal }) {
                             <div className="content-input">
                                 <p>Ví</p>
                                 <Button leftIcon={<IconWallet2 />}>
-                                    <div className="detail-input">
+                                    <div className="detail-input wallet">
                                         Tiền mặt trong túi
                                         <IconRight />
                                     </div>

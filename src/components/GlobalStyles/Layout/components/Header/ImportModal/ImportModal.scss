@@ -115,6 +115,10 @@
             align-items: center;
             gap: 64px;
         }
+
+        .wallet {
+            cursor: no-drop;
+        }
     }
 
     .note-input {
