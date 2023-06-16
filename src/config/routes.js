@@ -11,6 +11,7 @@ const routes = {
     SoGiaoDich: '/sogiaodich',
     BaoCao: '/baocao',
     NganSach: '/ngansach',
+    LichSu: '/lichsu',
 };
 
 export default routes;

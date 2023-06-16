@@ -1,0 +1,26 @@
+@use '../../../styles/' as *;
+
+.header {
+    color: #000;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-header {
+    height: 5vh;
+    font-weight: bold;
+    background-color: aliceblue;
+}
+
+.table-row {
+    height: 10vh;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.table-cell {
+    padding: 8px;
+}

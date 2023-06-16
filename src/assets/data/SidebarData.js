@@ -1,5 +1,5 @@
 import config from '~/config';
-import { IconWallet, IconBox, Iconpaper } from '~/components/GlobalStyles/Layout/components/Icons';
+import { IconWallet, IconBox, Iconpaper, IconHistory } from '~/components/GlobalStyles/Layout/components/Icons';
 
 export const SidebarData = [
     {
@@ -16,5 +16,10 @@ export const SidebarData = [
         title: 'Tiết Kiệm',
         path: config.routes.NganSach,
         icon: <Iconpaper />,
+    },
+    {
+        title: 'Nhật Ký',
+        path: config.routes.LichSu,
+        icon: <IconHistory />,
     },
 ];

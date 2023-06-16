@@ -72,14 +72,14 @@
     .description {
         @include flex(center, center, column);
 
-        height: 26vh;
+        height: 20vh;
         width: 100%;
         background-color: white;
 
         .descriptionTop {
             @include flex(center, space-evenly, unset);
 
-            height: 50%;
+            height: 100%;
             width: 90%;
             padding: 20px;
             font-size: 20px;
