@@ -1,12 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.scss';
 import { LogoMoney, IconGoogle, IconFacebook, IconPassword } from '~/components/GlobalStyles/Layout/components/Icons';
 import { useNavigate, Link } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [user, setUser] = useState([]);
+    const [profile, setProfile] = useState([]);
+
     const navigate = useNavigate();
+
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: (codeResponse) => setUser(codeResponse),
+        onError: (error) => console.log('Login Failed:', error),
+    });
+
+    useEffect(() => {
+        axios
+            .get('https://www.googleapis.com/oauth2/v2/userinfo', {
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                },
+                params: {
+                    access_token: user.access_token,
+                },
+            })
+            .then((res) => {
+                setProfile(res.data);
+                localStorage.setItem('accessToken', user.access_token); // Lưu access_token vào localStorage
+                navigate('/sogiaodich'); // Chuyển hướng tới '/sogiaodich'
+            })
+            .catch((err) => console.log(err));
+    }, [user]);
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -47,13 +75,6 @@ function Login() {
             .catch((error) => console.log('error', error));
     };
 
-    const handleGoogleLogin = () => {
-        const redirectUri = encodeURIComponent('{YOUR_REDIRECT_URI}');
-        const state = encodeURIComponent('{YOUR_STATE}');
-        const url = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id={YOUR_CLIENT_ID}&scope=email%20profile&redirect_uri=${redirectUri}&state=${state}`;
-        window.location.href = url;
-    };
-
     return (
         <div className="Container">
             <div className="Background-Top">
@@ -72,7 +93,7 @@ function Login() {
                             <span>Using social networking accounts</span>
                         </div>
                         <div className="social-items">
-                            <button className="social-item google" onClick={handleGoogleLogin}>
+                            <button className="social-item google" onClick={() => loginWithGoogle()}>
                                 <span className="btn-content">
                                     <IconGoogle />
                                     <span class="social-item-name">Connect with Google</span>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import config from '~/config';
 import { IconDate, IconLogo, IconSearch, IconArrowRight, AddIcon } from '../Icons';
 import Button from '../Button';
 import ImportModal from './ImportModal/ImportModal';
+import { googleLogout } from '@react-oauth/google';
 
 const cx = classNames.bind(styles);
 
@@ -13,6 +14,14 @@ function Header() {
     const [openModal, setOpenModal] = useState(false);
     const [incomeTotal, setIncomeTotal] = useState(0);
     const [expenseTotal, setExpenseTotal] = useState(0);
+    const navigate = useNavigate();
+
+    const logOut = () => {
+        googleLogout();
+        console.log(googleLogout());
+        localStorage.removeItem('accessToken'); // Xóa accessToken từ localStorage
+        navigate('/');
+    };
 
     useEffect(() => {
         fetchTotalByYear('incomes');
@@ -86,7 +95,7 @@ function Header() {
                     </div>
                     <div className={cx('name')}>
                         <span className={cx('user-name')}>{localStorage.getItem('userName')}</span>
-                        <Link className={cx('logout')} to={config.routes.home}>
+                        <Link className={cx('logout')} onClick={logOut} to={config.routes.home}>
                             Log out
                         </Link>
                     </div>
