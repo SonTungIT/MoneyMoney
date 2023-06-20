@@ -1,5 +1,6 @@
 import config from '~/config';
 import Login from '~/pages/Authenticated/Login';
+import Register from '~/pages/Authenticated/Register';
 import DefaultLayout from '~/components/GlobalStyles/Layout/DefaultLayout';
 import LayoutHome from '~/pages/Home/LayoutHome';
 import SoGiaoDich from '~/pages/User/SoGiaoDich/SoGiaoDich';
@@ -9,6 +10,7 @@ import LichSu from '~/pages/User/LichSu/LichSu';
 
 const publicRoutes = [
     { path: config.routes.login, component: Login, layout: null },
+    { path: config.routes.register, component: Register, layout: null },
     { path: config.routes.LayoutHome, component: LayoutHome, layout: null },
 
     { path: config.routes.SoGiaoDich, component: SoGiaoDich, layout: DefaultLayout },

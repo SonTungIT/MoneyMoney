@@ -52,12 +52,23 @@
                         border-radius: 3px;
                         font-weight: 600;
                     }
+
+                    .quantity {
+                        @include flex(center, space-evenly, unset);
+                        margin-top: 5px;
+                        input {
+                            width: 40%;
+                            padding: 5px;
+                            border: 1px solid #ff8a00;
+                            border-radius: 5px;
+                        }
+                    }
                 }
             }
 
-            .chonGoi:focus {
-                outline: 2px solid #ff8a00;
-            }
+            // .chonGoi:focus {
+            //     outline: 2px solid #ff8a00;
+            // }
         }
 
         .btn-signup {
@@ -111,5 +122,9 @@
 
 .paymentQRCode {
     width: 400px;
+    height: auto;
+}
+
+.card {
     height: auto;
 }

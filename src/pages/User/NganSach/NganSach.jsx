@@ -40,8 +40,18 @@ function NganSach() {
     const [selectedSubscription, setSelectedSubscription] = useState('');
     const [paymentQRCodeUrl, setPaymentQRCodeUrl] = useState('');
     const [isLoadingQRCode, setIsLoadingQRCode] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [api, contextHolder] = notification.useNotification();
+
+    const [quantities, setQuantities] = useState({
+        basic: 0,
+        special: 0,
+        vip: 0,
+    });
+
+    const [apiResponse, setApiResponse] = useState(null);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -56,73 +66,68 @@ function NganSach() {
     };
 
     const handleCallApi = async () => {
+        // Chuẩn bị dữ liệu gửi đi
         const token = localStorage.getItem('accessToken');
-        var myHeaders = new Headers();
+        const myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         myHeaders.append('Authorization', 'Bearer ' + token);
 
-        let packageType = '';
-        if (selectedSubscription === 'basic') {
-            packageType = '1-month';
-        } else if (selectedSubscription === 'special') {
-            packageType = '6-months';
-        } else if (selectedSubscription === 'vip') {
-            packageType = '1-year';
+        const subscriptions = [];
+
+        // Kiểm tra số lượng gói cơ bản và thêm vào mảng subscriptions
+        if (quantities.basic > 0) {
+            subscriptions.push({
+                subscriptionId: 1,
+                quantity: quantities.basic,
+            });
         }
 
-        var raw = JSON.stringify({
-            packageType: packageType,
-        });
+        // Kiểm tra số lượng gói đặc biệt và thêm vào mảng subscriptions
+        if (quantities.special > 0) {
+            subscriptions.push({
+                subscriptionId: 2,
+                quantity: quantities.special,
+            });
+        }
 
-        var requestOptions = {
+        // Kiểm tra số lượng gói VIP và thêm vào mảng subscriptions
+        if (quantities.vip > 0) {
+            subscriptions.push({
+                subscriptionId: 3,
+                quantity: quantities.vip,
+            });
+        }
+
+        const requestBody = {
+            subscriptions,
+        };
+
+        const requestOptions = {
             method: 'POST',
             headers: myHeaders,
-            body: raw,
+            body: JSON.stringify(requestBody),
             redirect: 'follow',
         };
 
-        setIsLoadingQRCode(true);
-
         try {
+            // Gọi API
             const response = await fetch(
-                'https://money-money.azurewebsites.net/api/v1/money-money/users/premiums/purchase',
+                'https://money-money.azurewebsites.net/api/v1/money-money/users/premiums/api/orders',
                 requestOptions,
             );
-            const result = await response.json();
-
             if (response.ok) {
-                const qrCodeUrl = result.paymentQRCodeUrl;
-                setPaymentQRCodeUrl(qrCodeUrl);
+                const result = await response.json(); // Parse the response as JSON
+                setApiResponse(result);
+                setTotalPrice(result.totalPrice); // Set the totalPrice in state
+                setPaymentQRCodeUrl('URL_HERE'); // Thay 'URL_HERE' bằng URL hình ảnh mã QR trả về từ API
                 setIsModalOpen(true);
-                if (result.message === 'already_premium') {
-                    setTimeout(() => {
-                        api.open({
-                            key,
-                            message: 'Đã tồn tại!',
-                            description: 'Bạn đã đăng ký gói trước đó!',
-                        });
-                    }, 1000);
-                }
             } else {
-                console.log('API response status:', response.status);
+                // Xử lý lỗi
+                console.log('Error:', response.status);
             }
         } catch (error) {
-            console.log('API error:', error);
-            // Handle API error if needed
-        } finally {
-            setIsLoadingQRCode(false);
-        }
-    };
-
-    const getSubscriptionImage = () => {
-        if (selectedSubscription === 'basic') {
-            return require('../../../assets/images/gói 1 tháng.jpg');
-        } else if (selectedSubscription === 'special') {
-            return require('../../../assets/images/gói 6 tháng.jpg');
-        } else if (selectedSubscription === 'vip') {
-            return require('../../../assets/images/gói 12 tháng.jpg');
-        } else {
-            return null;
+            // Xử lý lỗi
+            console.log('Error:', error);
         }
     };
 
@@ -155,8 +160,23 @@ function NganSach() {
                                 <button className={cx('chonGoi')} onClick={() => setSelectedSubscription('basic')}>
                                     <div className={cx('title')}>Gói cơ bản</div>
                                     <div className={cx('price')}>
-                                        <span>24.999đ</span>
+                                        <span>25.000đ</span>
                                         <p>1 tháng</p>
+                                        <div className={cx('quantity')}>
+                                            <p>Số lượng</p>
+                                            <input
+                                                className={cx('quantity')}
+                                                type="number"
+                                                placeholder="0"
+                                                value={quantities.basic} // For the 'basic' subscription option
+                                                onChange={(e) =>
+                                                    setQuantities((prevQuantities) => ({
+                                                        ...prevQuantities,
+                                                        basic: parseInt(e.target.value),
+                                                    }))
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 </button>
                                 <button className={cx('chonGoi')} onClick={() => setSelectedSubscription('special')}>
@@ -165,6 +185,21 @@ function NganSach() {
                                         <span>125.000 đ</span>
                                         <p>6 tháng</p>
                                         <div className={cx('btn-sale')}>TẶNG 1 THÁNG</div>
+                                        <div className={cx('quantity')}>
+                                            <p>Số lượng</p>
+                                            <input
+                                                className={cx('quantity')}
+                                                type="number"
+                                                placeholder="0"
+                                                value={quantities.special} // For the 'special' subscription option
+                                                onChange={(e) =>
+                                                    setQuantities((prevQuantities) => ({
+                                                        ...prevQuantities,
+                                                        special: parseInt(e.target.value),
+                                                    }))
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 </button>
                                 <button className={cx('chonGoi')} onClick={() => setSelectedSubscription('vip')}>
@@ -173,6 +208,21 @@ function NganSach() {
                                         <span>225.000 đ</span>
                                         <p>1 năm</p>
                                         <div className={cx('btn-sale')}>TẶNG 3 THÁNG</div>
+                                        <div className={cx('quantity')}>
+                                            <p>Số lượng</p>
+                                            <input
+                                                className={cx('quantity')}
+                                                type="number"
+                                                placeholder="0"
+                                                value={quantities.vip} // For the 'vip' subscription option
+                                                onChange={(e) =>
+                                                    setQuantities((prevQuantities) => ({
+                                                        ...prevQuantities,
+                                                        vip: parseInt(e.target.value),
+                                                    }))
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 </button>
                             </div>
@@ -180,29 +230,52 @@ function NganSach() {
                                 <Button primary className={cx('btn-signup')} onClick={handleCallApi}>
                                     Đăng ký
                                 </Button>
-                                <Modal visible={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
-                                    {isLoadingQRCode ? (
-                                        <p>Loading QR Code...</p>
-                                    ) : paymentQRCodeUrl ? (
-                                        <>
-                                            <img
-                                                src={getSubscriptionImage()}
-                                                className={cx('paymentQRCode')}
-                                                alt="Payment QR Code"
-                                            />
-                                            <p>
-                                                Thời gian còn lại: <CountdownTimer />
-                                            </p>
-                                            <p>Bấm 'Xác Nhận sau khi thanh toán!'</p>
-                                            {paymentQRCodeUrl && (
-                                                <Button primary className={cx('btn-signup')} onClick={handleConfirm}>
-                                                    Xác Nhận
-                                                </Button>
+                                <Modal
+                                    open={isModalOpen}
+                                    onOpen={handleOk}
+                                    onClose={handleCancel}
+                                    footer={[
+                                        <Button key="cancel" onClick={handleCancel}>
+                                            Hủy
+                                        </Button>,
+                                        <Button key="confirm" primary onClick={handleConfirm} loading={isSubmitting}>
+                                            Xác nhận
+                                        </Button>,
+                                    ]}
+                                >
+                                    <table className="table">
+                                        <thead>
+                                            <tr className="table-header">
+                                                <th className="table-cell">Sản Phẩm</th>
+                                                <th className="table-cell">Số Lượng</th>
+                                                <th className="table-cell">Số Tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {totalPrice > 0 && (
+                                                <tr className="table-row">
+                                                    <td className="table-cell">Gói cơ bản</td>
+                                                    <td className="table-cell">{quantities.basic}</td>
+                                                    <td className="table-cell">{apiResponse.list[0].totalPrice}</td>
+                                                </tr>
                                             )}
-                                        </>
-                                    ) : (
-                                        <p>Bạn đã đăng ký!</p>
-                                    )}
+                                            {totalPrice > 0 && (
+                                                <tr className="table-row">
+                                                    <td className="table-cell">Gói đặc biệt</td>
+                                                    <td className="table-cell">{quantities.special}</td>
+                                                    <td className="table-cell">{apiResponse.list[1].totalPrice}</td>
+                                                </tr>
+                                            )}
+                                            {totalPrice > 0 && (
+                                                <tr className="table-row">
+                                                    <td className="table-cell">Gói VIP</td>
+                                                    <td className="table-cell">{quantities.vip}</td>
+                                                    <td className="table-cell">{apiResponse.list[2].totalPrice}</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                    <p className="totalPrice">Tổng số tiền: {totalPrice}</p>
                                 </Modal>
                             </>
                         </div>
