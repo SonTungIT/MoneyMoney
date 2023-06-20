@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Login.scss';
 import { LogoMoney, IconGoogle, IconFacebook, IconPassword } from '~/components/GlobalStyles/Layout/components/Icons';
-import { useNavigate, Link } from 'react-router-dom';
-import { useGoogleLogin } from '@react-oauth/google';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import config from '~/config';
 
@@ -12,18 +11,43 @@ function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const handleSignup = async (event) => {
+        event.preventDefault();
+
+        if (password !== confirmPassword) {
+            setError('Xác thực mật khẩu chưa chính xác!');
+            return;
+        }
+
+        try {
+            const response = await axios.post('https://money-money.azurewebsites.net/api/v1/money-money/accounts', {
+                firstName,
+                lastName,
+                email,
+                password,
+            });
+
+            setSuccessMessage('Success! Please check your email to complete your registration.');
+        } catch (error) {
+            console.log('error', error);
+            setError('An error occurred during registration.');
+        }
+    };
 
     return (
         <div className="Container">
             <div className="Background-Top">
                 <span className="Logo">
-                    <LogoMoney></LogoMoney>
+                    <LogoMoney />
                 </span>
                 <span className="Title">Money Money</span>
             </div>
             <div className="wrap-form">
                 <div className="form-title-text">
-                    <span>Log In</span>
+                    <span>Đăng Ký</span>
                 </div>
                 <div className="wrap-form-body">
                     <div className="social">
@@ -34,13 +58,13 @@ function Register() {
                             <button className="social-item google">
                                 <span className="btn-content">
                                     <IconGoogle />
-                                    <span class="social-item-name">Connect with Google</span>
+                                    <span className="social-item-name">Connect with Google</span>
                                 </span>
                             </button>
                             <button className="social-item facebook">
                                 <span className="btn-content">
                                     <IconFacebook />
-                                    <span class="social-item-name">Connect with Facebook</span>
+                                    <span className="social-item-name">Connect with Facebook</span>
                                 </span>
                             </button>
                         </div>
@@ -49,7 +73,7 @@ function Register() {
                         <div className="account-text">
                             <span>Using Money Lover account</span>
                         </div>
-                        <form action="" className="form-login">
+                        <form action="" className="form-login" onSubmit={handleSignup}>
                             <div className="v-input v-application">
                                 <div className="v-input__control">
                                     <input
@@ -106,25 +130,24 @@ function Register() {
                             <div className="v-input v-application">
                                 <div className="v-input__control password">
                                     <input
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        name="confirmPassword"
                                         type="password"
-                                        id="password"
-                                        name="password"
-                                        required
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="XÁC THỰC MẬT KHẨU"
                                     />
                                     <div className="v-input__append-inner">
                                         <IconPassword />
                                     </div>
                                 </div>
                             </div>
+                            {error && <div className="error-message">{error}</div>}
+                            {successMessage && <div className="success-message">{successMessage}</div>}
                             <button type="submit" className="btn-submit">
                                 <span>Đăng Ký</span>
                             </button>
                         </form>
                         <div className="suggestion">
-                            {' '}
                             Have an account?{' '}
                             <Link className="suggestion-action" to={config.routes.login}>
                                 Login
