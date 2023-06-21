@@ -3,39 +3,37 @@ import LayoutUser from '../LayoutUser';
 import styles from './NganSach.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/GlobalStyles/Layout/components/Button';
-import { Avatar, Modal, notification } from 'antd';
-import { SmileOutlined } from '@ant-design/icons';
+import { Avatar, Modal, notification, Menu } from 'antd';
+import { AppstoreOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router-dom';
+import ModalConfirm from './ModalConfirm/ModalConfirm';
 
 const cx = classNames.bind(styles);
 
 const key = 'updatable';
 
-const CountdownTimer = () => {
-    const [timeLeft, setTimeLeft] = useState(120);
-
-    useEffect(() => {
-        if (timeLeft > 0) {
-            const timer = setTimeout(() => {
-                setTimeLeft(timeLeft - 1);
-            }, 1000);
-
-            return () => clearTimeout(timer);
-        }
-    }, [timeLeft]);
-
-    const formatTime = (time) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = time % 60;
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
     };
+}
 
-    return <span>{formatTime(timeLeft)}</span>;
-};
+const items = [
+    getItem('Phương thức thanh toán', 'sub1', <AppstoreOutlined />, [
+        getItem('Tiền mặt', '1'),
+        getItem('Momo', '2'),
+        getItem('Thẻ ngân hàng', '3'),
+    ]),
+];
 
 function NganSach() {
     const navigate = useNavigate();
 
+    const [openModal, setOpenModal] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedSubscription, setSelectedSubscription] = useState('');
     const [paymentQRCodeUrl, setPaymentQRCodeUrl] = useState('');
@@ -63,6 +61,10 @@ function NganSach() {
 
     const handleCancel = () => {
         setIsModalOpen(false);
+    };
+
+    const onClick = (e) => {
+        console.log('click ', e);
     };
 
     const handleCallApi = async () => {
@@ -121,6 +123,8 @@ function NganSach() {
                 setTotalPrice(result.totalPrice); // Set the totalPrice in state
                 setPaymentQRCodeUrl('URL_HERE'); // Thay 'URL_HERE' bằng URL hình ảnh mã QR trả về từ API
                 setIsModalOpen(true);
+                console.log(result);
+                localStorage.setItem('cardId', result.id);
             } else {
                 // Xử lý lỗi
                 console.log('Error:', response.status);
@@ -131,21 +135,26 @@ function NganSach() {
         }
     };
 
-    const handleConfirm = () => {
-        setIsModalOpen(false);
-        api.open({
-            message: 'Thành Công',
-            description: 'Bạn đã đăng ký thành công!',
-            icon: (
-                <SmileOutlined
-                    style={{
-                        position: 'absolute',
-                        color: '#108ee9',
-                    }}
-                />
-            ),
-        });
-        navigate('/sogiaodich');
+    const cardId = localStorage.getItem('cardId');
+    const handleConfirm = async () => {
+        const token = localStorage.getItem('accessToken');
+        const myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        myHeaders.append('Authorization', 'Bearer ' + token);
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            redirect: 'follow',
+        };
+
+        fetch(
+            `https://money-money.azurewebsites.net/api/v1/money-money/users/premiums/api/orders/${cardId}/checkout?assetId=5`,
+            requestOptions,
+        )
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.log('error', error));
     };
 
     return (
@@ -168,13 +177,16 @@ function NganSach() {
                                                 className={cx('quantity')}
                                                 type="number"
                                                 placeholder="0"
-                                                value={quantities.basic} // For the 'basic' subscription option
-                                                onChange={(e) =>
-                                                    setQuantities((prevQuantities) => ({
-                                                        ...prevQuantities,
-                                                        basic: parseInt(e.target.value),
-                                                    }))
-                                                }
+                                                value={quantities.basic}
+                                                onChange={(e) => {
+                                                    const value = parseInt(e.target.value);
+                                                    if (!isNaN(value) && value >= 0) {
+                                                        setQuantities((prevQuantities) => ({
+                                                            ...prevQuantities,
+                                                            basic: value,
+                                                        }));
+                                                    }
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -191,13 +203,16 @@ function NganSach() {
                                                 className={cx('quantity')}
                                                 type="number"
                                                 placeholder="0"
-                                                value={quantities.special} // For the 'special' subscription option
-                                                onChange={(e) =>
-                                                    setQuantities((prevQuantities) => ({
-                                                        ...prevQuantities,
-                                                        special: parseInt(e.target.value),
-                                                    }))
-                                                }
+                                                value={quantities.special}
+                                                onChange={(e) => {
+                                                    const value = parseInt(e.target.value);
+                                                    if (!isNaN(value) && value >= 0) {
+                                                        setQuantities((prevQuantities) => ({
+                                                            ...prevQuantities,
+                                                            special: value,
+                                                        }));
+                                                    }
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -214,13 +229,16 @@ function NganSach() {
                                                 className={cx('quantity')}
                                                 type="number"
                                                 placeholder="0"
-                                                value={quantities.vip} // For the 'vip' subscription option
-                                                onChange={(e) =>
-                                                    setQuantities((prevQuantities) => ({
-                                                        ...prevQuantities,
-                                                        vip: parseInt(e.target.value),
-                                                    }))
-                                                }
+                                                value={quantities.vip}
+                                                onChange={(e) => {
+                                                    const value = parseInt(e.target.value);
+                                                    if (!isNaN(value) && value >= 0) {
+                                                        setQuantities((prevQuantities) => ({
+                                                            ...prevQuantities,
+                                                            vip: value,
+                                                        }));
+                                                    }
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -234,11 +252,21 @@ function NganSach() {
                                     open={isModalOpen}
                                     onOpen={handleOk}
                                     onClose={handleCancel}
+                                    title={'Giỏ Hàng'}
                                     footer={[
                                         <Button key="cancel" onClick={handleCancel}>
                                             Hủy
                                         </Button>,
-                                        <Button key="confirm" primary onClick={handleConfirm} loading={isSubmitting}>
+                                        <Button
+                                            key="confirm"
+                                            primary
+                                            onClick={() => {
+                                                setIsModalOpen(false);
+                                                setOpenModal(true);
+                                                handleConfirm();
+                                            }}
+                                            loading={isSubmitting}
+                                        >
                                             Xác nhận
                                         </Button>,
                                     ]}
@@ -252,30 +280,50 @@ function NganSach() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {totalPrice > 0 && (
-                                                <tr className="table-row">
-                                                    <td className="table-cell">Gói cơ bản</td>
-                                                    <td className="table-cell">{quantities.basic}</td>
-                                                    <td className="table-cell">{apiResponse.list[0].totalPrice}</td>
-                                                </tr>
-                                            )}
-                                            {totalPrice > 0 && (
-                                                <tr className="table-row">
-                                                    <td className="table-cell">Gói đặc biệt</td>
-                                                    <td className="table-cell">{quantities.special}</td>
-                                                    <td className="table-cell">{apiResponse.list[1].totalPrice}</td>
-                                                </tr>
-                                            )}
-                                            {totalPrice > 0 && (
-                                                <tr className="table-row">
-                                                    <td className="table-cell">Gói VIP</td>
-                                                    <td className="table-cell">{quantities.vip}</td>
-                                                    <td className="table-cell">{apiResponse.list[2].totalPrice}</td>
-                                                </tr>
+                                            {totalPrice > 0 && apiResponse && apiResponse.list && (
+                                                <>
+                                                    {quantities.basic > 0 && (
+                                                        <tr className="table-row">
+                                                            <td className="table-cell">Gói cơ bản</td>
+                                                            <td className="table-cell">{quantities.basic}</td>
+                                                            <td className="table-cell">
+                                                                {apiResponse.list[0]?.totalPrice}
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                    {quantities.special > 0 && (
+                                                        <tr className="table-row">
+                                                            <td className="table-cell">Gói đặc biệt</td>
+                                                            <td className="table-cell">{quantities.special}</td>
+                                                            <td className="table-cell">
+                                                                {apiResponse.list[1]?.totalPrice}
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                    {quantities.vip > 0 && (
+                                                        <tr className="table-row">
+                                                            <td className="table-cell">Gói VIP</td>
+                                                            <td className="table-cell">{quantities.vip}</td>
+                                                            <td className="table-cell">
+                                                                {apiResponse.list[2]?.totalPrice}
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                </>
                                             )}
                                         </tbody>
                                     </table>
-                                    <p className="totalPrice">Tổng số tiền: {totalPrice}</p>
+                                    <p className="totalPrice">Tổng số tiền: {totalPrice}đ</p>
+                                    <Menu
+                                        onClick={onClick}
+                                        style={{
+                                            width: 256,
+                                        }}
+                                        defaultSelectedKeys={['1']}
+                                        defaultOpenKeys={['sub1']}
+                                        mode="inline"
+                                        items={items}
+                                    />
                                 </Modal>
                             </>
                         </div>
@@ -287,6 +335,7 @@ function NganSach() {
                         </div>
                     </div>
                 </div>
+                {openModal && <ModalConfirm closeModal={setOpenModal} />}
             </LayoutUser>
         </>
     );

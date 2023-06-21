@@ -1,0 +1,29 @@
+@use '../../../../styles/' as *;
+
+.detailBackground {
+    @include flex(center, center, column);
+    top: 0%;
+    right: 0%;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    z-index: 99;
+
+    .header {
+        width: 50%;
+    }
+
+    .body {
+        @include flex(center, space-evenly, unset);
+
+        width: 50%;
+        height: auto;
+        background-color: #fff;
+    }
+
+    .imgMomo {
+        width: 50%;
+        height: auto;
+    }
+}
