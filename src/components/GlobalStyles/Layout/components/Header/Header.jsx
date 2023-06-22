@@ -95,7 +95,7 @@ function Header() {
                     </div>
                     <div className={cx('name')}>
                         <span className={cx('user-name')}>{localStorage.getItem('userName')}</span>
-                        <Link className={cx('logout')} onClick={logOut} to={config.routes.home}>
+                        <Link className={cx('logout')} onClick={logOut} to={config.routes.LayoutHome}>
                             Log out
                         </Link>
                     </div>

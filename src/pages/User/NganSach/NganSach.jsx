@@ -335,7 +335,7 @@ function NganSach() {
                         </div>
                     </div>
                 </div>
-                {openModal && <ModalConfirm closeModal={setOpenModal} />}
+                {openModal && <ModalConfirm closeModal={setOpenModal} totalPrice={totalPrice} />}
             </LayoutUser>
         </>
     );

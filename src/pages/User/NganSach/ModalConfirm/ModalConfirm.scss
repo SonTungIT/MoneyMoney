@@ -18,12 +18,41 @@
         @include flex(center, space-evenly, unset);
 
         width: 50%;
+        padding: 30px;
         height: auto;
+        color: #fff;
         background-color: #fff;
+
+        .infoCard {
+            @include flex(start, space-around, column);
+
+            height: 80%;
+            width: 40%;
+            background-color: #ff8800;
+            padding: 10px;
+        }
+
+        p {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
     }
 
-    .imgMomo {
-        width: 50%;
-        height: auto;
+    .QRCard {
+        @include flex(center, space-evenly, column);
+        gap: 10px;
+
+        .imgMomo {
+            width: 80%;
+            height: auto;
+        }
+
+        p {
+            color: #ff8a00;
+        }
+
+        span {
+            text-align: center;
+        }
     }
 }
