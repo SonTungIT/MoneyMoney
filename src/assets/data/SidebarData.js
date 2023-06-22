@@ -17,9 +17,9 @@ export const SidebarData = [
         path: config.routes.NganSach,
         icon: <Iconpaper />,
     },
-    {
-        title: 'Nhật Ký',
-        path: config.routes.LichSu,
-        icon: <IconHistory />,
-    },
+    //     {
+    //         title: 'Nhật Ký',
+    //         path: config.routes.LichSu,
+    //         icon: <IconHistory />,
+    //     },
 ];
