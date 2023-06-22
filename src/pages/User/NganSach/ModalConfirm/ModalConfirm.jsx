@@ -63,10 +63,7 @@ function ModalConfirm({ closeModal, totalPrice }) {
                             onTimerComplete={handleTimerComplete}
                         />
                     </p>
-                    <p className={cx('price')}>
-                        Số tiền: <br />
-                        {totalPrice}đ
-                    </p>
+                    <p className={cx('price')}>Số tiền: {totalPrice} vnd</p>
                     <Button leftIcon={<IconBack />} onClick={handleGoBack}>
                         Quay lại
                     </Button>
