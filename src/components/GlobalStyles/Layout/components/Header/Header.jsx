@@ -14,6 +14,7 @@ function Header() {
     const [openModal, setOpenModal] = useState(false);
     const [incomeTotal, setIncomeTotal] = useState(0);
     const [expenseTotal, setExpenseTotal] = useState(0);
+    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate();
 
     const logOut = () => {
@@ -83,21 +84,22 @@ function Header() {
                         <IconDate />
                         <IconSearch />
                     </div>
-                    <div>
-                        <div className={cx('btn-user-avatar')} type="file">
-                            <img
-                                className={cx('user-avatar')}
-                                src="https://i.pinimg.com/236x/e1/6c/70/e16c704fc0b655e553dd7a1a8a00475d.jpg"
-                                alt="avatar"
-                            />
-                            {/* Render user avatar */}
-                        </div>
+                    <div className={cx('btn-user-avatar')} onClick={() => setShowDropdown(!showDropdown)}>
+                        <img
+                            className={cx('user-avatar')}
+                            src="https://i.pinimg.com/236x/e1/6c/70/e16c704fc0b655e553dd7a1a8a00475d.jpg"
+                            alt="avatar"
+                        />
+                        {showDropdown && (
+                            <div className={cx('logout-dropdown')}>
+                                <span className={cx('logout')} onClick={logOut}>
+                                    Log out
+                                </span>
+                            </div>
+                        )}
                     </div>
                     <div className={cx('name')}>
                         <span className={cx('user-name')}>{localStorage.getItem('userName')}</span>
-                        <Link className={cx('logout')} onClick={logOut} to={config.routes.LayoutHome}>
-                            Log out
-                        </Link>
                     </div>
                 </div>
             </div>

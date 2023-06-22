@@ -35,6 +35,9 @@ function ModalConfirm({ closeModal, totalPrice }) {
         // Implement your logic when the timer completes (e.g., close modal)
         closeModal();
     };
+    const handleGoBack = () => {
+        closeModal();
+    };
 
     const countdownStyles = {
         color: 'red', // Custom style for the countdown timer
@@ -52,7 +55,7 @@ function ModalConfirm({ closeModal, totalPrice }) {
                     </span>
                 </div>
                 <div className={cx('infoCard')}>
-                    <p>
+                    <p className={cx('timer')}>
                         Đơn hàng hết hạn sau:{' '}
                         <CountdownTimer
                             styles={countdownStyles}
@@ -60,11 +63,13 @@ function ModalConfirm({ closeModal, totalPrice }) {
                             onTimerComplete={handleTimerComplete}
                         />
                     </p>
-                    <p>
+                    <p className={cx('price')}>
                         Số tiền: <br />
                         {totalPrice}đ
                     </p>
-                    <Button leftIcon={<IconBack />}>Quay lại</Button>
+                    <Button leftIcon={<IconBack />} onClick={handleGoBack}>
+                        Quay lại
+                    </Button>
                 </div>
             </div>
         </div>

@@ -25,16 +25,26 @@
 
         .infoCard {
             @include flex(start, space-around, column);
-
             height: 80%;
             width: 40%;
-            background-color: #ff8800;
+            background-color: #f89a2d;
             padding: 10px;
-        }
+            border-radius: 5px;
 
-        p {
-            font-size: 20px;
-            margin-bottom: 10px;
+            p {
+                font-size: 20px;
+                margin-bottom: 10px;
+
+                &.timer {
+                    color: #ffffff;
+                }
+
+                &.price {
+                    color: #ffffff;
+                    font-weight: bold;
+                    display: flex;
+                }
+            }
         }
     }
 
@@ -53,6 +63,8 @@
 
         span {
             text-align: center;
+            color: black;
+            font-size: larger;
         }
     }
 }
