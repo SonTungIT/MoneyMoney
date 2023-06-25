@@ -23,7 +23,7 @@ function SoGiaoDich() {
     const [endingBalance, setEndingBalance] = useState(0);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
 
-    const [selectedMonth, setSelectedMonth] = useState(moment().subtract(1, 'month'));
+    const [selectedMonth, setSelectedMonth] = useState(dayjs().startOf('month'));
 
     useEffect(() => {
         const fetchData = async () => {
