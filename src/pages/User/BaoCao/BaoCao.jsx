@@ -102,6 +102,7 @@ function BaoCao() {
     return (
         <LayoutUser>
             <div className={cx('calendar')}>
+                <p>Vui lòng chọn tháng:</p>
                 <DatePicker
                     selected={selectedDate}
                     onChange={(date) => setSelectedDate(date)}
