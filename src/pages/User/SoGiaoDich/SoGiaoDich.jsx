@@ -203,7 +203,8 @@ function SoGiaoDich() {
     return (
         <LayoutUser>
             <Tabs defaultActiveKey="1" onChange={handleTabChange} className="header">
-                <Tabs.TabPane tab={`BÁO CÁO THEO THÁNG ${selectedMonth}`} key="1">
+                <Tabs.TabPane tab={`BÁO CÁO CHI TIÊU THÁNG`} key="1">
+                    <p>Vui lòng chọn tháng:</p>
                     <DatePicker
                         value={dayjs(selectedMonth)} // Chuyển đổi selectedMonth thành đối tượng Day.js bằng dayjs(selectedMonth)
                         onChange={(date) => handleMonthChange(date)}
