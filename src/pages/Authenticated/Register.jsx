@@ -23,7 +23,7 @@ function Register() {
         }
 
         try {
-            const response = await axios.post('https://money-money.azurewebsites.net/api/v1/money-money/accounts', {
+            const response = await axios.post('https://money-money1.azurewebsites.net/api/v1/money-money/accounts', {
                 firstName,
                 lastName,
                 email,
@@ -71,7 +71,7 @@ function Register() {
                     </div>
                     <div className="network">
                         <div className="account-text">
-                            <span>Using Money Lover account</span>
+                            <span>Using Money Money account</span>
                         </div>
                         <form action="" className="form-login" onSubmit={handleSignup}>
                             <div className="v-input v-application">

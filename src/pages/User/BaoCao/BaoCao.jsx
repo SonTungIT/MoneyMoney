@@ -38,7 +38,7 @@ function BaoCao() {
         const month = date.getMonth() + 1;
 
         fetch(
-            `https://money-money.azurewebsites.net/api/v1/money-money/users/${category}/total-by-month?date=${year}%2F${month}%2F01`,
+            `https://money-money1.azurewebsites.net/api/v1/money-money/users/${category}/total-by-month?date=${year}%2F${month}%2F01`,
             requestOptions,
         )
             .then((response) => response.json())
@@ -67,15 +67,15 @@ function BaoCao() {
 
         Promise.all([
             fetch(
-                `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=${year}%2F${month}%2F01`,
+                `https://money-money1.azurewebsites.net/api/v1/money-money/users/profits/total-by-month?date=${year}%2F${month}%2F01`,
                 requestOptions,
             ).then((response) => response.json()),
             fetch(
-                `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/starting-balance/${month}/${year}`,
+                `https://money-money1.azurewebsites.net/api/v1/money-money/users/profits/starting-balance/${month}/${year}`,
                 requestOptions,
             ).then((response) => response.text()),
             fetch(
-                `https://money-money.azurewebsites.net/api/v1/money-money/users/profits/ending-balance/${month}/${year}`,
+                `https://money-money1.azurewebsites.net/api/v1/money-money/users/profits/ending-balance/${month}/${year}`,
                 requestOptions,
             ).then((response) => response.text()),
         ])
