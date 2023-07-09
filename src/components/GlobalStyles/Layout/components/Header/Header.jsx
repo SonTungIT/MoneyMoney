@@ -40,7 +40,7 @@ function Header() {
         };
 
         fetch(
-            `https://money-money.azurewebsites.net/api/v1/money-money/users/${category}/total-by-year?year=2023`,
+            `https://money-money1.azurewebsites.net/api/v1/money-money/users/${category}/total-by-year?year=2023`,
             requestOptions,
         )
             .then((response) => response.text())
