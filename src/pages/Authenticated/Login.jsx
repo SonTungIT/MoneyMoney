@@ -14,28 +14,28 @@ function Login() {
 
     const navigate = useNavigate();
 
-    const loginWithGoogle = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse),
-        onError: (error) => console.log('Login Failed:', error),
-    });
+    // const loginWithGoogle = useGoogleLogin({
+    //     onSuccess: (codeResponse) => setUser(codeResponse),
+    //     onError: (error) => console.log('Login Failed:', error),
+    // });
 
-    useEffect(() => {
-        axios
-            .get('https://www.googleapis.com/oauth2/v2/userinfo', {
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                },
-                params: {
-                    access_token: user.access_token,
-                },
-            })
-            .then((res) => {
-                setProfile(res.data);
-                localStorage.setItem('accessToken', user.access_token); // Lưu access_token vào localStorage
-                navigate('/sogiaodich'); // Chuyển hướng tới '/sogiaodich'
-            })
-            .catch((err) => console.log(err));
-    }, [user]);
+    // useEffect(() => {
+    //     axios
+    //         .get('https://www.googleapis.com/oauth2/v2/userinfo', {
+    //             headers: {
+    //                 Authorization: `Bearer ${user.access_token}`,
+    //             },
+    //             params: {
+    //                 access_token: user.access_token,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             setProfile(res.data);
+    //             localStorage.setItem('accessToken', user.access_token); // Lưu access_token vào localStorage
+    //             navigate('/sogiaodich'); // Chuyển hướng tới '/sogiaodich'
+    //         })
+    //         .catch((err) => console.log(err));
+    // }, [user]);
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -94,7 +94,7 @@ function Login() {
                             <span>Using social networking accounts</span>
                         </div>
                         <div className="social-items">
-                            <button className="social-item google" onClick={() => loginWithGoogle()}>
+                            <button className="social-item google">
                                 <span className="btn-content">
                                     <IconGoogle />
                                     <span class="social-item-name">Connect with Google</span>

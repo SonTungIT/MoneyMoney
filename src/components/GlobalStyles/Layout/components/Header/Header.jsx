@@ -20,7 +20,7 @@ function Header() {
     const logOut = () => {
         googleLogout();
         console.log(googleLogout());
-        localStorage.removeItem('accessToken'); // Xóa accessToken từ localStorage
+        localStorage.clear();
         navigate('/');
     };
 

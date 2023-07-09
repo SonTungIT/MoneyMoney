@@ -200,6 +200,8 @@ function SoGiaoDich() {
         setTotalProfit(totalProfit.toLocaleString());
     };
 
+    console.log(filteredTransactions);
+
     return (
         <LayoutUser>
             <Tabs defaultActiveKey="1" onChange={handleTabChange} className="header">
@@ -211,7 +213,7 @@ function SoGiaoDich() {
                         picker="month"
                         className="month-picker"
                     />
-                    {Object.entries(categoryTotals[4] || {}).length === 0 ? (
+                    {filteredTransactions.length === 0 ? (
                         <div className="no-transaction">
                             <IconSad />
                             Không có giao dịch
@@ -240,20 +242,15 @@ function SoGiaoDich() {
                                 </Button>
                                 <div className="bodyBot">
                                     {Object.entries(
-                                        filteredTransactions
-                                            .filter(
-                                                (transaction) =>
-                                                    transaction.incomeCategoryName || transaction.expenseCategoryName,
-                                            )
-                                            .reduce((groupedTransactions, transaction) => {
-                                                const category =
-                                                    transaction.incomeCategoryName || transaction.expenseCategoryName;
-                                                if (!groupedTransactions[category]) {
-                                                    groupedTransactions[category] = [];
-                                                }
-                                                groupedTransactions[category].push(transaction);
-                                                return groupedTransactions;
-                                            }, {}),
+                                        filteredTransactions.reduce((groupedTransactions, transaction) => {
+                                            const category =
+                                                transaction.incomeCategoryName || transaction.expenseCategoryName;
+                                            if (!groupedTransactions[category]) {
+                                                groupedTransactions[category] = [];
+                                            }
+                                            groupedTransactions[category].push(transaction);
+                                            return groupedTransactions;
+                                        }, {}),
                                     ).map(([category, categoryTransactions]) => {
                                         const totalCategoryAmount = categoryTransactions.reduce(
                                             (total, transaction) => {
