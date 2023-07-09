@@ -78,7 +78,7 @@ function ImportModal({ closeModal }) {
                 <div className="title">
                     <h1>Thêm giao dịch</h1>
                 </div>
-                <form className="form-input" onSubmit={handleFormSubmit}>
+                <div className="form-input">
                     <div className="body">
                         <label className="label-input">
                             <div className="content-input">
@@ -135,11 +135,11 @@ function ImportModal({ closeModal }) {
                         <Button onClick={() => closeModal(false)} text>
                             Hủy
                         </Button>
-                        <Button type="submit" rounded>
+                        <Button rounded onClick={handleFormSubmit}>
                             Lưu
                         </Button>
                     </div>
-                </form>
+                </div>
             </div>
             {openDetail && <ImportDetail closeDetail={setOpenDetail} setSelectedGroup={handleGroupSelection} />}
         </div>
