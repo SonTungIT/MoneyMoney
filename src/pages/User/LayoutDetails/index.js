@@ -49,7 +49,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             redirect: 'follow',
         };
 
-        fetch(`https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/${id}`, requestOptions)
+        fetch(`https://money-money1.azurewebsites.net/api/v1/money-money/users/incomes/${id}`, requestOptions)
             .then((response) => response.text())
             .then((result) => {
                 console.log(result);
@@ -73,7 +73,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             redirect: 'follow',
         };
 
-        fetch(`https://money-money.azurewebsites.net/api/v1/money-money/users/incomes/${id}`, requestOptions)
+        fetch(`https://money-money1.azurewebsites.net/api/v1/money-money/users/incomes/${id}`, requestOptions)
             .then((response) => response.text())
             .then((result) => {
                 console.log(result);
@@ -81,7 +81,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             })
             .catch((error) => console.log('error', error));
 
-        fetch(`https://money-money.azurewebsites.net/api/v1/money-money/users/expenses/${id}`, requestOptions)
+        fetch(`https://money-money1.azurewebsites.net/api/v1/money-money/users/expenses/${id}`, requestOptions)
             .then((response) => response.text())
             .then((result) => {
                 console.log(result);
