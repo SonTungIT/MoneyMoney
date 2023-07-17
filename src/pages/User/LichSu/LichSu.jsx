@@ -25,10 +25,7 @@ function LichSu() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(
-            'https://money-money1.azurewebsites.net/api/v1/money-money/users/premiums/premium-history',
-            requestOptions,
-        )
+        fetch('https://moneymoney.azurewebsites.net/api/v1/money-money/users/premiums/premium-history', requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch premium history');

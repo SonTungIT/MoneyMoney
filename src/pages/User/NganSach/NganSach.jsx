@@ -114,7 +114,7 @@ function NganSach() {
         try {
             // Gọi API
             const response = await fetch(
-                'https://money-money1.azurewebsites.net/api/v1/money-money/users/premiums/api/orders',
+                'https://moneymoney.azurewebsites.net/api/v1/money-money/users/premiums/api/orders',
                 requestOptions,
             );
             if (response.ok) {
@@ -149,7 +149,7 @@ function NganSach() {
         };
 
         fetch(
-            `https://money-money1.azurewebsites.net/api/v1/money-money/users/premiums/api/orders/${cardId}/checkout?assetId=5`,
+            `https://moneymoney.azurewebsites.net/api/v1/money-money/users/premiums/api/orders/${cardId}/checkout?assetId=5`,
             requestOptions,
         )
             .then((response) => response.text())

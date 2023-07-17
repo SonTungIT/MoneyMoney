@@ -32,8 +32,8 @@ function SoGiaoDich() {
                 const headers = { Authorization: `Bearer ${accessToken}` };
 
                 const [incomesResponse, expensesResponse] = await Promise.all([
-                    fetch('https://money-money1.azurewebsites.net/api/v1/money-money/users/incomes', { headers }),
-                    fetch('https://money-money1.azurewebsites.net/api/v1/money-money/users/expenses', { headers }),
+                    fetch('https://moneymoney.azurewebsites.net/api/v1/money-money/users/incomes', { headers }),
+                    fetch('https://moneymoney.azurewebsites.net/api/v1/money-money/users/expenses', { headers }),
                 ]);
 
                 if (!incomesResponse.ok || !expensesResponse.ok) {
@@ -65,7 +65,7 @@ function SoGiaoDich() {
                 setCategoryAmounts(amounts);
 
                 fetch(
-                    `https://money-money1.azurewebsites.net/api/v1/money-money/users/incomes/total-incomes-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
+                    `https://moneymoney.azurewebsites.net/api/v1/money-money/users/incomes/total-incomes-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.json())
@@ -76,7 +76,7 @@ function SoGiaoDich() {
 
                 // Fetching total expense
                 fetch(
-                    `https://money-money1.azurewebsites.net/api/v1/money-money/users/expenses/total-expenses-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
+                    `https://moneymoney.azurewebsites.net/api/v1/money-money/users/expenses/total-expenses-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.json())
@@ -87,7 +87,7 @@ function SoGiaoDich() {
 
                 // Fetching total profit
                 fetch(
-                    `https://money-money1.azurewebsites.net/api/v1/money-money/users/profits/total-profits-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
+                    `https://moneymoney.azurewebsites.net/api/v1/money-money/users/profits/total-profits-by-month/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.json())
@@ -98,7 +98,7 @@ function SoGiaoDich() {
 
                 // Fetching opening balance
                 fetch(
-                    `https://money-money1.azurewebsites.net/api/v1/money-money/users/profits/starting-balance/${selectedMonth.month()}/${selectedMonth.year()}`,
+                    `https://moneymoney.azurewebsites.net/api/v1/money-money/users/profits/starting-balance/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.text())
@@ -109,7 +109,7 @@ function SoGiaoDich() {
 
                 // Fetching ending balance
                 fetch(
-                    `https://money-money1.azurewebsites.net/api/v1/money-money/users/profits/ending-balance/${selectedMonth.month()}/${selectedMonth.year()}`,
+                    `https://moneymoney.azurewebsites.net/api/v1/money-money/users/profits/ending-balance/${selectedMonth.month()}/${selectedMonth.year()}`,
                     requestOptions,
                 )
                     .then((response) => response.text())

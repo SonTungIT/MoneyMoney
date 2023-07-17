@@ -56,7 +56,7 @@ function Login() {
             redirect: 'follow',
         };
 
-        fetch('https://money-money1.azurewebsites.net/api/v1/money-money/accounts/authentication', requestOptions)
+        fetch('https://moneymoney.azurewebsites.net/api/v1/money-money/accounts/authentication', requestOptions)
             .then((response) => {
                 if (response.ok) {
                     return response.json();

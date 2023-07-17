@@ -23,7 +23,7 @@ function Register() {
         }
 
         try {
-            const response = await axios.post('https://money-money1.azurewebsites.net/api/v1/money-money/accounts', {
+            const response = await axios.post('https://moneymoney.azurewebsites.net/api/v1/money-money/accounts', {
                 firstName,
                 lastName,
                 email,
