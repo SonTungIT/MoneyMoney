@@ -48,6 +48,7 @@ function ImportModal({ closeModal }) {
             })
             .then((result) => {
                 console.log(result);
+                window.location.reload();
                 closeModal(false);
             })
             .catch((error) => console.log('error', error));
