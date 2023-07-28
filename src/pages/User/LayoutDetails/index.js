@@ -78,6 +78,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             .then((result) => {
                 console.log(result);
                 onDeleteTransaction(id);
+                window.location.reload();
             })
             .catch((error) => console.log('error', error));
 
@@ -86,6 +87,7 @@ function LayoutDetails({ closeLayoutDetails, transactionData, onDeleteTransactio
             .then((result) => {
                 console.log(result);
                 onDeleteTransaction(id);
+                window.location.reload();
             })
             .catch((error) => console.log('error', error));
     };

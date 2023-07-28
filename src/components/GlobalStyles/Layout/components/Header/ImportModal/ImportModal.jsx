@@ -39,7 +39,7 @@ function ImportModal({ closeModal }) {
             redirect: 'follow',
         };
         // API incomes
-        fetch('https://money-money1.azurewebsites.net/api/v1/money-money/users/incomes', requestOptions)
+        fetch('https://moneymoney.azurewebsites.net/api/v1/money-money/users/incomes', requestOptions)
             .then((response) => {
                 if (response.ok) {
                     return response.json();
@@ -54,7 +54,7 @@ function ImportModal({ closeModal }) {
             .catch((error) => console.log('error', error));
 
         // API expenses
-        fetch('https://money-money1.azurewebsites.net/api/v1/money-money/users/expenses', requestOptions)
+        fetch('https://moneymoney.azurewebsites.net/api/v1/money-money/users/expenses', requestOptions)
             .then((response) => {
                 if (response.ok) {
                     return response.json();
@@ -64,6 +64,7 @@ function ImportModal({ closeModal }) {
             .then((result) => {
                 console.log(result);
                 closeModal(false);
+                window.location.reload();
             })
             .catch((error) => console.log('error', error));
     };
@@ -137,7 +138,7 @@ function ImportModal({ closeModal }) {
                             Hủy
                         </Button>
                         <Button rounded onClick={handleFormSubmit}>
-                            Lưu
+                            Thêm
                         </Button>
                     </div>
                 </div>
